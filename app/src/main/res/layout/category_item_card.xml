@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    tools:context=".presentation.NewExpenseFragment">
+
+
+    <Button
+        android:id="@+id/categoryItem"
+        style="@style/Widget.Material3.Button.OutlinedButton.Icon"
+        android:src="@drawable/expenses_shopping_cart_48"
+        tools:icon = "@drawable/expenses_shopping_cart_48"
+        android:drawableTint="@color/secondary_text"
+        android:textColor="@color/secondary_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Продукты"
+        />
+
+
+</LinearLayout>

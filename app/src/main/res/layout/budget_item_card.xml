@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    app:cardCornerRadius="4dp"
+    android:layout_margin="2dp"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+   <androidx.constraintlayout.widget.ConstraintLayout
+       android:layout_width="match_parent"
+       android:layout_height="wrap_content"
+       android:layout_margin="8dp"
+       >
+
+       <ImageView
+           android:id="@+id/budgetItemPic"
+           android:layout_width="24dp"
+           android:layout_height="24dp"
+           android:layout_gravity="center"
+           android:layout_marginStart="8dp"
+           app:tint="@color/secondary_text"
+           android:src="@drawable/expenses_shopping_cart_48"
+           app:layout_constraintStart_toStartOf="parent"
+           app:layout_constraintTop_toTopOf="parent" />
+
+       <TextView
+           android:id="@+id/budgetItemName"
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:layout_marginStart="24dp"
+           android:text="Продукты"
+           app:layout_constraintBottom_toBottomOf="@+id/budgetItemPic"
+           app:layout_constraintStart_toEndOf="@+id/budgetItemPic"
+           app:layout_constraintTop_toTopOf="@+id/budgetItemPic" />
+
+       <TextView
+           android:id="@+id/budgetItemPrice"
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:layout_marginEnd="16dp"
+           android:text="500 руб."
+           app:layout_constraintBottom_toBottomOf="@+id/budgetItemName"
+           app:layout_constraintEnd_toStartOf="@+id/deleteBtn"
+           app:layout_constraintTop_toTopOf="@+id/budgetItemName" />
+
+       <ImageButton
+           android:id="@+id/deleteBtn"
+           style="@style/Widget.Material3.Button.IconButton"
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           app:tint="@color/secondary_text"
+           app:layout_constraintBottom_toBottomOf="@+id/budgetItemPrice"
+           app:layout_constraintEnd_toEndOf="parent"
+           app:layout_constraintTop_toTopOf="@+id/budgetItemPrice"
+           app:srcCompat="@drawable/ic_baseline_delete_24" />
+
+   </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.cardview.widget.CardView>
