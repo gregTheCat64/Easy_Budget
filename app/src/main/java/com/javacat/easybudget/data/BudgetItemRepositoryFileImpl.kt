@@ -24,10 +24,6 @@ class BudgetItemRepositoryFileImpl(
     private lateinit var incomes: List<BudgetItem>
     private var lastId: Long? = 0L
 
-
-
-    //private lateinit var incomes: List<BudgetItem>
-
     init {
         val file = context.filesDir.resolve(filename)
         if (file.exists()){
@@ -88,7 +84,7 @@ class BudgetItemRepositoryFileImpl(
     private fun filterByCategories() {
         Log.i("MyLog", "$budgetItems in Filter")
         expenses = budgetItems.filter { it.category.type == Type.EXPENSES }
-        incomes = budgetItems.filter { it.category.type==Type.INCOMES }
+        incomes = budgetItems.filter { it.category.type == Type.INCOMES }
     }
 
     private fun sync(){

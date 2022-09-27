@@ -32,6 +32,7 @@ class IncomesFragment : Fragment() {
                     budgetItemViewModel.removeById(budgetItem.id)
                     binding.recViewIncomes.smoothScrollToPosition(0)
                     Toast.makeText(context, "Удалено", Toast.LENGTH_SHORT).show()
+                    budgetItemViewModel.calculateCurrentBudget()
                 }
             }
         )

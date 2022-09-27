@@ -10,7 +10,7 @@
    <androidx.constraintlayout.widget.ConstraintLayout
        android:layout_width="match_parent"
        android:layout_height="wrap_content"
-       android:layout_margin="8dp"
+
        >
 
        <ImageView
@@ -19,10 +19,11 @@
            android:layout_height="24dp"
            android:layout_gravity="center"
            android:layout_marginStart="8dp"
-           app:tint="@color/secondary_text"
            android:src="@drawable/expenses_shopping_cart_48"
+           app:layout_constraintBottom_toBottomOf="@+id/budgetItemDate"
            app:layout_constraintStart_toStartOf="parent"
-           app:layout_constraintTop_toTopOf="parent" />
+           app:layout_constraintTop_toTopOf="@+id/budgetItemName"
+           app:tint="@color/secondary_text" />
 
        <TextView
            android:id="@+id/budgetItemName"
@@ -30,9 +31,20 @@
            android:layout_height="wrap_content"
            android:layout_marginStart="24dp"
            android:text="Продукты"
-           app:layout_constraintBottom_toBottomOf="@+id/budgetItemPic"
+           android:textSize="14sp"
+           android:layout_marginTop="@dimen/small_space"
            app:layout_constraintStart_toEndOf="@+id/budgetItemPic"
-           app:layout_constraintTop_toTopOf="@+id/budgetItemPic" />
+           app:layout_constraintTop_toTopOf="parent" />
+
+       <TextView
+           android:id="@+id/budgetItemDate"
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:text="27 сентября"
+           android:textSize="12sp"
+           app:layout_constraintBottom_toBottomOf="parent"
+           app:layout_constraintStart_toStartOf="@+id/budgetItemName"
+           app:layout_constraintTop_toBottomOf="@+id/budgetItemName" />
 
        <TextView
            android:id="@+id/budgetItemPrice"
@@ -40,7 +52,7 @@
            android:layout_height="wrap_content"
            android:layout_marginEnd="16dp"
            android:text="500 руб."
-           app:layout_constraintBottom_toBottomOf="@+id/budgetItemName"
+           app:layout_constraintBottom_toBottomOf="@+id/budgetItemDate"
            app:layout_constraintEnd_toStartOf="@+id/deleteBtn"
            app:layout_constraintTop_toTopOf="@+id/budgetItemName" />
 
