@@ -4,7 +4,6 @@ import android.app.DatePickerDialog
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.fragment.app.Fragment
@@ -14,14 +13,13 @@ import com.javacat.easybudget.domain.adapters.MainVpAdapter
 import com.javacat.easybudget.domain.models.BudgetItem
 import com.javacat.easybudget.domain.models.Category
 import com.javacat.easybudget.domain.models.Type
-import com.javacat.easybudget.domain.viewmodels.BudgetItemViewModel
+import com.javacat.easybudget.domain.viewmodels.BudgetViewModel
 import com.javacat.easybudget.domain.viewmodels.CategoryViewModel
 import java.util.Calendar
-import java.util.Date
 
 class NewItemActivity : AppCompatActivity() {
     private val categoryViewModel: CategoryViewModel by viewModels()
-    private val budgetItemViewModel: BudgetItemViewModel by viewModels()
+    private val budgetViewModel: BudgetViewModel by viewModels()
     private val fragList = listOf(
         NewExpenseFragment.newInstance(),
         NewIncomeFragment.newInstance()
@@ -39,15 +37,16 @@ class NewItemActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         //Календарь
-        val calendar = Calendar.getInstance()
+        var calendar = Calendar.getInstance()
         val year = calendar.get(Calendar.YEAR)
         val month = calendar.get(Calendar.MONTH)
         val day = calendar.get(Calendar.DAY_OF_MONTH)
-        var date = Date()
+
+
         binding.calendarBtn.setOnClickListener {
             val dpd = DatePickerDialog(this, DatePickerDialog.OnDateSetListener{view, mYear, mMonth, mDay ->
                 binding.editTextDate.setText(""+ mDay +"/"+mMonth+"/"+mYear)
-                date = Date(mYear,mMonth,mDay)
+                calendar.set(mYear,mMonth,mDay)
             }, year,month,day)
             dpd.show()
         }
@@ -64,19 +63,19 @@ class NewItemActivity : AppCompatActivity() {
         }.attach()
 
         binding.addNewItemBtn.setOnClickListener {
-            save(date)
+            save(calendar)
         }
         binding.saveBtn.setOnClickListener {
-            save(date)
+            save(calendar)
         }
         binding.backBtn.setOnClickListener {
             startActivity(Intent(this, MainActivity::class.java))
         }
-
     }
-    private fun save(date: Date){
+    private fun save(calendar: Calendar){
         var categoryOfItem: Category? = null
         var priceOfItem = 0
+
         if (binding.priceOfBudgetItem.text.isNotBlank()){
             priceOfItem = binding.priceOfBudgetItem.text.toString().toInt()
         } else {
@@ -96,12 +95,12 @@ class NewItemActivity : AppCompatActivity() {
             Toast.makeText(applicationContext, "Выберите категорию", Toast.LENGTH_SHORT).show()
             return
         }
-        budgetItemViewModel.save(BudgetItem(
+        budgetViewModel.save(BudgetItem(
             0,
             nameOfItem,
             categoryOfItem,
             priceOfItem,
-            date = date
+            date = calendar
         ))
         val intent = Intent(this, MainActivity::class.java)
         startActivity(intent)

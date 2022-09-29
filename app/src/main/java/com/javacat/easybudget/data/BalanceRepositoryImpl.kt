@@ -6,7 +6,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 
 
-class BudgetRepositoryImpl(private val context: Context):com.javacat.easybudget.domain.BudgetRepository {
+class BalanceRepositoryImpl(private val context: Context):com.javacat.easybudget.domain.BalanceRepository {
 
     private var startBudget = 0
     private val filename = "currentBudget.txt"

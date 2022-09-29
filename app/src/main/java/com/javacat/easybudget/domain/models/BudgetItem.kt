@@ -1,5 +1,6 @@
 package com.javacat.easybudget.domain.models
 
+import java.util.Calendar
 import java.util.Date
 
 
@@ -8,6 +9,6 @@ data class BudgetItem(
     val name: String,
     val category: Category,
     val cost: Int,
-    val date:Date
+    val date:Calendar
 ) {
 }

@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.javacat.easybudget.databinding.BudgetItemCardBinding
 import com.javacat.easybudget.domain.models.BudgetItem
+import java.text.DateFormat
 
 class MainAdapter(private val listener: OnListener
 ): ListAdapter<BudgetItem, BudgetItemViewHolder>(BudgetDiffCallback()) {
@@ -45,11 +46,13 @@ class BudgetItemViewHolder(
     private val listener: OnListener
 ): RecyclerView.ViewHolder(binding.root) {
     fun bind(budgetItem: BudgetItem){
+        val dateFormatter = DateFormat.getDateInstance(DateFormat.MEDIUM)
+
         binding.apply {
             budgetItemName.text = budgetItem.name
             budgetItemPic.setImageResource(budgetItem.category.pic)
             budgetItemPrice.text = budgetItem.cost.toString()
-            budgetItemDate.text = budgetItem.date.toString()
+            budgetItemDate.text = dateFormatter.format(budgetItem.date.time)
             deleteBtn.setOnClickListener {
                 listener.onRemove(budgetItem)
 

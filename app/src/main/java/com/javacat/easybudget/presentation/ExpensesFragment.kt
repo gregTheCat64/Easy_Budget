@@ -13,11 +13,11 @@ import com.javacat.easybudget.databinding.FragmentExpensesBinding
 import com.javacat.easybudget.domain.adapters.MainAdapter
 import com.javacat.easybudget.domain.adapters.OnListener
 import com.javacat.easybudget.domain.models.BudgetItem
-import com.javacat.easybudget.domain.viewmodels.BudgetItemViewModel
+import com.javacat.easybudget.domain.viewmodels.BudgetViewModel
 
 
 class ExpensesFragment : Fragment() {
-    private val budgetItemViewModel:BudgetItemViewModel by activityViewModels()
+    private val budgetViewModel:BudgetViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -25,20 +25,21 @@ class ExpensesFragment : Fragment() {
     ): View? {
         val binding = FragmentExpensesBinding.inflate(inflater, container,false)
         binding.recViewExpenses.layoutManager  = LinearLayoutManager(context)
+        //budgetItemViewModel.filterByMonth()
         val mainAdapter = MainAdapter(
             object : OnListener {
                 override fun onRemove(budgetItem: BudgetItem) {
-                    budgetItemViewModel.removeById(budgetItem.id)
+                    budgetViewModel.removeById(budgetItem.id)
                     Log.i("MyLog", "fragmentRemoving")
                     binding.recViewExpenses.smoothScrollToPosition(0)
                     Toast.makeText(context, "Удалено", Toast.LENGTH_SHORT).show()
-                    budgetItemViewModel.calculateCurrentBudget() //??????
+                    budgetViewModel.getCurrentBalance()
                 }
             }
         )
         binding.recViewExpenses.adapter = mainAdapter
 
-        budgetItemViewModel.expenseItems.observe(viewLifecycleOwner) {expenses->
+        budgetViewModel.expensesData.observe(viewLifecycleOwner) { expenses->
             mainAdapter.submitList(expenses)
         }
         return binding.root

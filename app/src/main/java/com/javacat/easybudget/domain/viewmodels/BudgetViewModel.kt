@@ -2,41 +2,36 @@ package com.javacat.easybudget.domain.viewmodels
 
 import android.app.Application
 import android.util.Log
-import android.widget.Toast
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import com.javacat.easybudget.data.BudgetItemRepositoryFileImpl
-import com.javacat.easybudget.data.BudgetRepositoryImpl
+import com.javacat.easybudget.data.BalanceRepositoryImpl
+import com.javacat.easybudget.data.BudgetRepositoryFileImpl
+import com.javacat.easybudget.domain.BudgetRepository
 import com.javacat.easybudget.domain.models.BudgetItem
 import com.javacat.easybudget.domain.models.Type
 
-class BudgetItemViewModel(application: Application): AndroidViewModel(application) {
-    private val repository = BudgetItemRepositoryFileImpl(context = application)
-    private val budgetRepository = BudgetRepositoryImpl(application)
-
-    private val _currentBudgetData = MutableLiveData<Int>()
-    val currentBudgetData = _currentBudgetData
+class BudgetViewModel(application: Application): AndroidViewModel(application) {
+    private val repository: BudgetRepository = BudgetRepositoryFileImpl(context = application)
+    private val startBalanceRepository = BalanceRepositoryImpl(context = application)
 
     val data = repository.getAll()
-    fun removeById(id: Long) {
-        repository.removeById(id)
-        Log.i("MyLog", "viewModelRemoving")
+    val expensesData = repository.getExpenses()
+    val incomesData = repository.getIncomes()
+    val currentBalance = MutableLiveData<Int>()
 
-    }
-    fun save(budgetItem: BudgetItem) {
-        repository.save(budgetItem)
-    }
-    fun edit(budgetItem: BudgetItem){
+    fun save(budgetItem:BudgetItem){
         repository.save(budgetItem)
     }
 
-    val expenseItems = repository.getExpenses()
-    val incomeItems = repository.getIncomes()
+    fun removeById(id:Long) = repository.removeById(id)
 
+    fun saveMonth(month: Int) {
+        repository.saveCurrentMonth(month)
+        Log.i("MyLog", "save $month")
+    }
 
-    fun calculateCurrentBudget() {
+    fun getCurrentBalance():LiveData<Int> {
         val data = repository.getAll().value as List
         val expenseList = data.filter { it.category.type == Type.EXPENSES }
         val incomeList = data.filter { it.category.type == Type.INCOMES }
@@ -44,7 +39,7 @@ class BudgetItemViewModel(application: Application): AndroidViewModel(applicatio
         var expenses = 0
         var incomes = 0
 
-        val startBudgetData = budgetRepository.getStartBudget()
+        val startBudgetData = startBalanceRepository.getStartBudget()
         val startBudget = startBudgetData.value as Int
         //считаем цены всех расходов
         if (expenseList.isNotEmpty()) {
@@ -61,12 +56,12 @@ class BudgetItemViewModel(application: Application): AndroidViewModel(applicatio
         }
         Log.i("MyLog", "$incomes in ViewModel")
         //получаем текущий баланс:
-        _currentBudgetData.value = startBudget-expenses+incomes
-        currentBudgetData.value = _currentBudgetData.value
-
+       currentBalance.value = startBudget-expenses+incomes
+        return currentBalance
     }
 
-    fun saveStartBudget(startBudget: Int) {
-        budgetRepository.saveStartBudget(startBudget)
+    fun saveStartBalance(startBalance: Int){
+        startBalanceRepository.saveStartBudget(startBalance)
     }
 }
+

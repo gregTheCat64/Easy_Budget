@@ -1,6 +1,7 @@
 package com.javacat.easybudget.presentation
 
 import android.app.AlertDialog
+import android.app.DatePickerDialog
 import android.content.DialogInterface
 import android.content.Intent
 import android.content.SharedPreferences
@@ -13,11 +14,13 @@ import com.google.android.material.tabs.TabLayoutMediator
 import com.javacat.easybudget.databinding.ActivityMainBinding
 import com.javacat.easybudget.databinding.StartBudgetDialogBinding
 import com.javacat.easybudget.domain.adapters.MainVpAdapter
-import com.javacat.easybudget.domain.viewmodels.BudgetItemViewModel
+import com.javacat.easybudget.domain.models.Months
+import com.javacat.easybudget.domain.viewmodels.BudgetViewModel
 import com.javacat.easybudget.utils.AndroidUtils
+import java.util.*
 
 class MainActivity : AppCompatActivity() {
-    private val budgetItemViewModel:BudgetItemViewModel by viewModels()
+    private val budgetViewModel:BudgetViewModel by viewModels()
 
     private val fragList = listOf(
         ExpensesFragment.newInstance(),
@@ -27,28 +30,32 @@ class MainActivity : AppCompatActivity() {
         "Расходы",
         "Доходы"
     )
-
     private val PREFS_FILE = "PrefFile"
     private val PREF_IS_NEW = "isNewUser"
 
     private lateinit var binding: ActivityMainBinding
     private  var startBudgetValue = 0
-    private var currentBudgetValue = startBudgetValue
+    private var currentBudgetValue: Int? = startBudgetValue
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        //получаем данные
+                //получаем данные
         val settings = getSharedPreferences(PREFS_FILE, MODE_PRIVATE)
-        budgetItemViewModel.calculateCurrentBudget()
-        budgetItemViewModel.currentBudgetData.observe(this){
-            Log.i("MyLog", "mainObserver")
+        budgetViewModel.getCurrentBalance().observe(this){
             currentBudgetValue = it
-            Toast.makeText(this, "$currentBudgetValue", Toast.LENGTH_SHORT).show()
             updateUi()
         }
+        //получаем текущий месяц
+        //Календарь
+        var calendar = Calendar.getInstance()
+        val month = calendar.get(Calendar.MONTH)
+        var currentMonth = month
+        binding.currentMonth.text = Months.months[currentMonth]
+        budgetViewModel.saveMonth(currentMonth)
+
 
         //диалог при первом запуске
         val isNewUser = settings.getBoolean(PREF_IS_NEW, true)
@@ -56,8 +63,24 @@ class MainActivity : AppCompatActivity() {
                 showDialog(settings)
         )
 
-        binding.startBudget.setOnClickListener {
+        //редактируем баланс:
+        binding.startBalance.setOnClickListener {
             showDialog(settings)
+        }
+
+
+        //кнопки взад вперед:
+        binding.previousBtn.setOnClickListener {
+            currentMonth = currentMonth-1
+            budgetViewModel.saveMonth(currentMonth)
+            binding.currentMonth.text = Months.months[currentMonth]
+            Log.i("MyLog", "${currentMonth} in Main")
+        }
+
+        binding.nextBtn.setOnClickListener {
+            currentMonth = currentMonth+1
+            budgetViewModel.saveMonth(currentMonth)
+            binding.currentMonth.text = Months.months[currentMonth]
         }
 
         //адаптер
@@ -98,7 +121,8 @@ class MainActivity : AppCompatActivity() {
                 }
 
                 settings.edit().putBoolean(PREF_IS_NEW, false).apply()
-                budgetItemViewModel.saveStartBudget(startBudget)
+                budgetViewModel.saveStartBalance(startBudget)
+                budgetViewModel.getCurrentBalance()
                 updateUi()
                 dialog.dismiss()
             }
@@ -108,7 +132,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun updateUi(){
-        binding.startBudget.text = currentBudgetValue.toString()
+        binding.startBalance.text = currentBudgetValue.toString()
         Log.i("MyLog", "updateUi")
     }
 

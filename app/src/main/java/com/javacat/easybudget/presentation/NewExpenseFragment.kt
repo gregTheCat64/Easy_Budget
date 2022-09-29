@@ -12,12 +12,12 @@ import com.javacat.easybudget.data.ExpenseCategData
 import com.javacat.easybudget.databinding.FragmentNewExpenseBinding
 import com.javacat.easybudget.domain.adapters.CategoryAdapter
 import com.javacat.easybudget.domain.models.Category
-import com.javacat.easybudget.domain.viewmodels.BudgetItemViewModel
+import com.javacat.easybudget.domain.viewmodels.BudgetViewModel
 import com.javacat.easybudget.domain.viewmodels.CategoryViewModel
 
 class NewExpenseFragment : Fragment(), CategoryAdapter.Listener {
     private val categViewModel: CategoryViewModel by activityViewModels()
-    private val budgetItemViewModel: BudgetItemViewModel by activityViewModels()
+    private val budgetViewModel: BudgetViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -35,7 +35,7 @@ class NewExpenseFragment : Fragment(), CategoryAdapter.Listener {
 
     override fun onClick(category: Category) {
         categViewModel.save(category)
-        budgetItemViewModel.calculateCurrentBudget()
+        //budgetViewModel.calculateCurrentBudget()
         Log.d("LALA", category.name)
     //Toast.makeText(context, "clicked ${category.name}", Toast.LENGTH_SHORT).show()
     }

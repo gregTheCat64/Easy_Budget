@@ -8,16 +8,15 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.javacat.easybudget.R
 import com.javacat.easybudget.databinding.FragmentIncomesBinding
 import com.javacat.easybudget.domain.adapters.MainAdapter
 import com.javacat.easybudget.domain.adapters.OnListener
 import com.javacat.easybudget.domain.models.BudgetItem
-import com.javacat.easybudget.domain.viewmodels.BudgetItemViewModel
+import com.javacat.easybudget.domain.viewmodels.BudgetViewModel
 
 
 class IncomesFragment : Fragment() {
-    private val budgetItemViewModel:BudgetItemViewModel by activityViewModels()
+    private val budgetViewModel:BudgetViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -29,15 +28,15 @@ class IncomesFragment : Fragment() {
         val mainAdapter = MainAdapter(
             object : OnListener{
                 override fun onRemove(budgetItem: BudgetItem) {
-                    budgetItemViewModel.removeById(budgetItem.id)
+                    budgetViewModel.removeById(budgetItem.id)
                     binding.recViewIncomes.smoothScrollToPosition(0)
                     Toast.makeText(context, "Удалено", Toast.LENGTH_SHORT).show()
-                    budgetItemViewModel.calculateCurrentBudget()
+                    budgetViewModel.getCurrentBalance()
                 }
             }
         )
         binding.recViewIncomes.adapter = mainAdapter
-        budgetItemViewModel.incomeItems.observe(viewLifecycleOwner) {incomes->
+        budgetViewModel.incomesData.observe(viewLifecycleOwner) { incomes->
             mainAdapter.submitList(incomes)
         }
         return binding.root
