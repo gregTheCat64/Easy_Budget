@@ -9,7 +9,7 @@
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="200dp"
+        android:layout_height="100dp"
         android:background="?attr/colorPrimary"
         android:minHeight="?attr/actionBarSize"
         android:theme="?attr/actionBarTheme"
@@ -17,6 +17,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" >
+
+
         <TextView
             android:id="@+id/textView"
             android:layout_width="wrap_content"
@@ -79,7 +81,6 @@
         app:layout_constraintTop_toTopOf="@+id/nextBtn" />
 
 
-
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tabLayout"
         android:layout_width="match_parent"
@@ -92,15 +93,13 @@
 
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Расходы"
-             />
+            android:text="Расходы" />
 
         <com.google.android.material.tabs.TabItem
 
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Доходы"
-             />
+            android:text="Доходы" />
 
 
     </com.google.android.material.tabs.TabLayout>

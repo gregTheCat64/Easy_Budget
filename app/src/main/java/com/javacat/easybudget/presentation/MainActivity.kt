@@ -69,16 +69,19 @@ class MainActivity : AppCompatActivity() {
         }
 
 
+
         //кнопки взад вперед:
         binding.previousBtn.setOnClickListener {
-            currentMonth = currentMonth-1
+            if (currentMonth == 0) {return@setOnClickListener}
+            currentMonth -= 1
             budgetViewModel.saveMonth(currentMonth)
             binding.currentMonth.text = Months.months[currentMonth]
-            Log.i("MyLog", "${currentMonth} in Main")
+            Log.i("MyLog", "$currentMonth in Main")
         }
 
         binding.nextBtn.setOnClickListener {
-            currentMonth = currentMonth+1
+            if (currentMonth == 11) {return@setOnClickListener}
+            currentMonth += 1
             budgetViewModel.saveMonth(currentMonth)
             binding.currentMonth.text = Months.months[currentMonth]
         }
