@@ -128,12 +128,16 @@ class BudgetViewModel(application: Application) : AndroidViewModel(application) 
                     }
                     daysCount++
                     startDate = startDate?.plusDays(1)
-                    daylySum *= daysCount
-                    sumRecommended.value = (daylySum - expensesSum)
                 }
+                daylySum *= daysCount
+                sumRecommended.value = (daylySum - expensesSum)
+                Log.i("LIFE", "getSumEXPsum :${expensesSum}")
+                Log.i("LIFE", "getSumDayleSUM :${daylySum}")
+                Log.i("LIFE", "getSumDays :${daysCount}")
             }
         }
         Log.i("LIFE", "getSumRecom :${sumRecommended.value}")
+
         return sumRecommended
     }
 }
