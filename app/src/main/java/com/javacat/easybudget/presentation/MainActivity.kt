@@ -1,26 +1,24 @@
 package com.javacat.easybudget.presentation
 
 import android.app.AlertDialog
-import android.app.DatePickerDialog
 import android.content.DialogInterface
 import android.content.Intent
 import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import android.widget.Toast
+import android.view.View
 import androidx.activity.viewModels
 import com.google.android.material.tabs.TabLayoutMediator
 import com.javacat.easybudget.databinding.ActivityMainBinding
 import com.javacat.easybudget.databinding.StartBudgetDialogBinding
 import com.javacat.easybudget.domain.adapters.MainVpAdapter
-import com.javacat.easybudget.domain.models.Months
 import com.javacat.easybudget.domain.viewmodels.BudgetViewModel
 import com.javacat.easybudget.utils.AndroidUtils
-import java.util.*
+import java.time.LocalDate
 
 class MainActivity : AppCompatActivity() {
-    private val budgetViewModel:BudgetViewModel by viewModels()
+    private val budgetViewModel: BudgetViewModel by viewModels()
 
     private val fragList = listOf(
         ExpensesFragment.newInstance(),
@@ -34,34 +32,51 @@ class MainActivity : AppCompatActivity() {
     private val PREF_IS_NEW = "isNewUser"
 
     private lateinit var binding: ActivityMainBinding
-    private  var startBudgetValue = 0
+    private var currentDate: LocalDate = LocalDate.now()
+    private var startBudgetValue = 0
     private var currentBudgetValue: Int? = startBudgetValue
+    private var budgetEconomyValue = 0
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
-                //получаем данные
+        updateUi()
+        //получаем данные
         val settings = getSharedPreferences(PREFS_FILE, MODE_PRIVATE)
-        budgetViewModel.getCurrentBalance().observe(this){
-            currentBudgetValue = it
-            updateUi()
-        }
+
         //получаем текущий месяц
         //Календарь
-        var calendar = Calendar.getInstance()
-        val month = calendar.get(Calendar.MONTH)
-        var currentMonth = month
-        binding.currentMonth.text = Months.months[currentMonth]
-        budgetViewModel.saveMonth(currentMonth)
+//        val localDate = LocalDate.now()
+//        var currentDate = localDate
+        //val dateFormatter = SimpleDateFormat("dd.MM.yyyy")
+        binding.currentDay.text = "${currentDate.dayOfMonth} ${currentDate.month}"
+        budgetViewModel.setDay(currentDate)
+        Log.i("TIME", "date in main$currentDate")
+
+        //получаем тек. баланс
+        budgetViewModel.getCurrentBalance().observe(this) {
+            currentBudgetValue = it
+            Log.i("LIFE", "getCURbalanceOBSERVER")
+            updateUi()
+        }
+
+        budgetViewModel.getSumRecommended().observe(this){
+            budgetEconomyValue = it
+            Log.i("LIFE", "getSUMRecOBSERVER")
+            updateUi()
+        }
+
+
+
 
 
         //диалог при первом запуске
         val isNewUser = settings.getBoolean(PREF_IS_NEW, true)
-        if (isNewUser)(
+        if (isNewUser) (
                 showDialog(settings)
-        )
+                )
 
         //редактируем баланс:
         binding.startBalance.setOnClickListener {
@@ -69,21 +84,17 @@ class MainActivity : AppCompatActivity() {
         }
 
 
-
         //кнопки взад вперед:
         binding.previousBtn.setOnClickListener {
-            if (currentMonth == 0) {return@setOnClickListener}
-            currentMonth -= 1
-            budgetViewModel.saveMonth(currentMonth)
-            binding.currentMonth.text = Months.months[currentMonth]
-            Log.i("MyLog", "$currentMonth in Main")
+            currentDate = currentDate.minusDays(1)
+            budgetViewModel.setDay(currentDate)
+            updateUi()
         }
 
         binding.nextBtn.setOnClickListener {
-            if (currentMonth == 11) {return@setOnClickListener}
-            currentMonth += 1
-            budgetViewModel.saveMonth(currentMonth)
-            binding.currentMonth.text = Months.months[currentMonth]
+            currentDate = currentDate.plusDays(1)
+            budgetViewModel.setDay(currentDate)
+            updateUi()
         }
 
         //адаптер
@@ -96,6 +107,14 @@ class MainActivity : AppCompatActivity() {
 
         binding.addBtn.setOnClickListener {
             startActivity(Intent(this, NewItemActivity::class.java))
+        }
+
+        binding.toChartsBtn.setOnClickListener {
+            startActivity(Intent(this, ChartActivity::class.java))
+        }
+
+        binding.infoCardView.setOnClickListener {
+            startActivity(Intent(this, MonthlySpendingsActivity::class.java))
         }
     }
 
@@ -134,10 +153,27 @@ class MainActivity : AppCompatActivity() {
         dialog.show()
     }
 
-    private fun updateUi(){
+//    private showEconomyDialog(){
+//
+//    }
+
+    private fun updateUi() {
+        Log.i("LIFE", "updateUi")
         binding.startBalance.text = currentBudgetValue.toString()
-        Log.i("MyLog", "updateUi")
+        binding.RecSumTextView.text = budgetEconomyValue.toString()
+        binding.currentDay.text = "${currentDate.dayOfMonth} ${currentDate.month}"
+
+        if (currentDate == LocalDate.now()) {
+            binding.nextBtn.visibility = View.INVISIBLE
+        } else binding.nextBtn.visibility = View.VISIBLE
+        Log.i("MYLOG", "budgetvalue: $budgetEconomyValue")
+                if (budgetEconomyValue == 0) {
+
+            binding.cardViewTextView.text = "Нажмите на карточку, чтобы добавить регулярные расходы"
+            binding.RecSumTextView.visibility = View.INVISIBLE
+        } else {
+            binding.cardViewTextView.text = "Лимит расходов на сегодня:"
+            binding.RecSumTextView.visibility = View.VISIBLE
+        }
     }
-
-
 }

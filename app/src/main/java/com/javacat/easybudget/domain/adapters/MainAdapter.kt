@@ -52,7 +52,7 @@ class BudgetItemViewHolder(
             budgetItemName.text = budgetItem.name
             budgetItemPic.setImageResource(budgetItem.category.pic)
             budgetItemPrice.text = budgetItem.cost.toString()
-            budgetItemDate.text = dateFormatter.format(budgetItem.date.time)
+            budgetItemDate.text = budgetItem.date.toString()
             deleteBtn.setOnClickListener {
                 listener.onRemove(budgetItem)
 

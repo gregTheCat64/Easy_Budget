@@ -35,9 +35,7 @@ class NewExpenseFragment : Fragment(), CategoryAdapter.Listener {
 
     override fun onClick(category: Category) {
         categViewModel.save(category)
-        //budgetViewModel.calculateCurrentBudget()
-        Log.d("LALA", category.name)
-    //Toast.makeText(context, "clicked ${category.name}", Toast.LENGTH_SHORT).show()
+
     }
 
     companion object {

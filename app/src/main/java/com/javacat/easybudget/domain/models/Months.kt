@@ -1,6 +1,7 @@
 package com.javacat.easybudget.domain.models
 
 object Months {
+
     val months = arrayListOf(
         "Январь",
         "Февраль",
