@@ -12,4 +12,7 @@ data class BudgetItem(
     val cost: Int,
     val date: LocalDate
 ) {
+    override fun toString(): String {
+        return name
+    }
 }

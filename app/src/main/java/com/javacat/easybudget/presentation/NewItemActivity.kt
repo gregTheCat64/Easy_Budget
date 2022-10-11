@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
@@ -45,6 +46,9 @@ class NewItemActivity : AppCompatActivity() {
         val year = calendar.get(Calendar.YEAR)
         val month = calendar.get(Calendar.MONTH)
         val day = calendar.get(Calendar.DAY_OF_MONTH)
+//        val maxDate = Calendar.getInstance()
+//        maxDate.set(Calendar.DAY_OF_MONTH, day)
+
         var choosenDate: LocalDate = LocalDate.now()
 
 
@@ -53,8 +57,10 @@ class NewItemActivity : AppCompatActivity() {
                 binding.editTextDate.setText(""+ mDay +"/"+mMonth+"/"+mYear)
                 calendar.set(mYear,mMonth,mDay)
                 choosenDate = LocalDate.of(mYear,mMonth+1,mDay)
+                Log.i("MyCAL", "choosenDate: $choosenDate")
             }, year,month,day)
             dpd.show()
+
         }
 
         categoryViewModel.getCategory().observe(this) {
@@ -101,6 +107,7 @@ class NewItemActivity : AppCompatActivity() {
             Toast.makeText(applicationContext, "Выберите категорию", Toast.LENGTH_SHORT).show()
             return
         }
+        Log.i("MyCAL", "choosenDate: $choosenDate")
         budgetViewModel.save(BudgetItem(
             0,
             nameOfItem,

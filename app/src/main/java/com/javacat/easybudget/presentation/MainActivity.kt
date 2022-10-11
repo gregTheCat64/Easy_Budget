@@ -14,11 +14,14 @@ import com.javacat.easybudget.databinding.ActivityMainBinding
 import com.javacat.easybudget.databinding.StartBudgetDialogBinding
 import com.javacat.easybudget.domain.adapters.MainVpAdapter
 import com.javacat.easybudget.domain.viewmodels.BudgetViewModel
+import com.javacat.easybudget.domain.viewmodels.RegularSpendingsViewModel
 import com.javacat.easybudget.utils.AndroidUtils
 import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 
 class MainActivity : AppCompatActivity() {
     private val budgetViewModel: BudgetViewModel by viewModels()
+    private val regularSpendingsViewModel:RegularSpendingsViewModel by viewModels()
 
     private val fragList = listOf(
         ExpensesFragment.newInstance(),
@@ -50,8 +53,7 @@ class MainActivity : AppCompatActivity() {
         //Календарь
 //        val localDate = LocalDate.now()
 //        var currentDate = localDate
-        //val dateFormatter = SimpleDateFormat("dd.MM.yyyy")
-        binding.currentDay.text = "${currentDate.dayOfMonth} ${currentDate.month}"
+
         budgetViewModel.setDay(currentDate)
         Log.i("TIME", "date in main$currentDate")
 
@@ -62,14 +64,12 @@ class MainActivity : AppCompatActivity() {
             updateUi()
         }
 
-        budgetViewModel.getSumRecommended().observe(this){
+
+        regularSpendingsViewModel.getSumRecommended().observe(this){
             budgetEconomyValue = it
             Log.i("LIFE", "getSUMRecOBSERVER")
             updateUi()
         }
-
-
-
 
 
         //диалог при первом запуске
@@ -114,7 +114,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         binding.infoCardView.setOnClickListener {
-            startActivity(Intent(this, MonthlySpendingsActivity::class.java))
+            startActivity(Intent(this, RegularSpendingsActivity::class.java))
         }
     }
 
@@ -161,7 +161,9 @@ class MainActivity : AppCompatActivity() {
         Log.i("LIFE", "updateUi")
         binding.startBalance.text = currentBudgetValue.toString()
         binding.RecSumTextView.text = budgetEconomyValue.toString()
-        binding.currentDay.text = "${currentDate.dayOfMonth} ${currentDate.month}"
+        val dateFormatter = DateTimeFormatter.ofPattern("dd MMMM yy")
+        var formattedDate = currentDate.format(dateFormatter)
+        binding.currentDay.text = "$formattedDate"
 
         if (currentDate == LocalDate.now()) {
             binding.nextBtn.visibility = View.INVISIBLE

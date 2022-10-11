@@ -32,16 +32,7 @@ class BudgetViewModel(application: Application) : AndroidViewModel(application) 
     val expensesDataByDay = repository.getExpensesByDay()
     val incomesDataByDay = repository.getIncomesByDay()
     val currentBalance = MutableLiveData<Int>()
-    val sumRecommended = MutableLiveData<Int>()
 
-    //budgetEconomy:
-    private val budgetEconomy = budgetEconomyRepository.getBudgetEconomyObject()
-
-    var regularExpenses = 0
-    var regularIncomes = 0
-
-    var currentDate = LocalDate.now()
-    var tempDate = LocalDate.now()
 
 
     fun save(budgetItem: BudgetItem) {
@@ -56,10 +47,6 @@ class BudgetViewModel(application: Application) : AndroidViewModel(application) 
 
     fun saveStartBalance(startBalance: Int) {
         startBalanceRepository.saveStartBudget(startBalance)
-    }
-
-    fun saveBudgetEconomy(budgetEconomy: BudgetEconomy) {
-        budgetEconomyRepository.save(budgetEconomy)
     }
 
 
@@ -94,52 +81,7 @@ class BudgetViewModel(application: Application) : AndroidViewModel(application) 
     }
 
 
-    fun getSumRecommended(): LiveData<Int> {
 
-        val dataList = data.value as List
-
-        regularExpenses = budgetEconomy.regularExpensesSum
-        regularIncomes = budgetEconomy.regularIncomesSum
-        var startDate: LocalDate? = budgetEconomy.startDate
-        if (regularExpenses != 0 && regularIncomes != 0) {
-
-            var filteredByDayExpList: List<BudgetItem>?
-            var expensesSum = 0
-            var daylySum = ((regularIncomes.toDouble() - regularExpenses) / 30).roundToInt()
-            val expenses = dataList.filter {
-                it.category.type == Type.EXPENSES
-            }
-
-            var daysCount = 0
-
-            if (startDate != null && currentDate !=null){
-                while (startDate?.isBefore(currentDate.plusDays(1)) == true) {
-                    Log.i("MY_VM", "expensesFilter stDate: $startDate")
-                    filteredByDayExpList =
-                        expenses.filter {
-                            it.date.dayOfMonth == startDate?.dayOfMonth &&
-                                    it.date.month == startDate?.month &&
-                                    it.date.year == startDate?.year
-                        }
-                    Log.i("MY_VM", "expensesFilter: $filteredByDayExpList")
-//
-                    for (i in filteredByDayExpList.indices) {
-                        expensesSum += filteredByDayExpList[i].cost
-                    }
-                    daysCount++
-                    startDate = startDate?.plusDays(1)
-                }
-                daylySum *= daysCount
-                sumRecommended.value = (daylySum - expensesSum)
-                Log.i("LIFE", "getSumEXPsum :${expensesSum}")
-                Log.i("LIFE", "getSumDayleSUM :${daylySum}")
-                Log.i("LIFE", "getSumDays :${daysCount}")
-            }
-        }
-        Log.i("LIFE", "getSumRecom :${sumRecommended.value}")
-
-        return sumRecommended
-    }
 }
 
 

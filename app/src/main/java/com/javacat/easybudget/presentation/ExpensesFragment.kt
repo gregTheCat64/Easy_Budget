@@ -14,10 +14,12 @@ import com.javacat.easybudget.domain.adapters.MainAdapter
 import com.javacat.easybudget.domain.adapters.OnListener
 import com.javacat.easybudget.domain.models.BudgetItem
 import com.javacat.easybudget.domain.viewmodels.BudgetViewModel
+import com.javacat.easybudget.domain.viewmodels.RegularSpendingsViewModel
 
 
 class ExpensesFragment : Fragment() {
     private val budgetViewModel: BudgetViewModel by activityViewModels()
+    private val regularSpendingsViewModel: RegularSpendingsViewModel by activityViewModels()
 
 
     override fun onCreateView(
@@ -35,7 +37,7 @@ class ExpensesFragment : Fragment() {
                     binding.recViewExpenses.smoothScrollToPosition(0)
                     Toast.makeText(context, "Удалено", Toast.LENGTH_SHORT).show()
                     budgetViewModel.getCurrentBalance()
-                    budgetViewModel.getSumRecommended()
+                    regularSpendingsViewModel.getSumRecommended()
                 }
             }
         )

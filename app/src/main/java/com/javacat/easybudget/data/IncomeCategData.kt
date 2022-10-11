@@ -13,5 +13,6 @@ class IncomeCategData {
         Category("Подработка", R.drawable.incomes_camera_48, Type.INCOMES),
     )
 
+
     fun getAll() = incomeCategories
 }

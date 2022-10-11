@@ -3,10 +3,12 @@ package com.javacat.easybudget.domain.adapters
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.view.animation.AnimationUtils
 import android.widget.Toast
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.javacat.easybudget.R
 import com.javacat.easybudget.databinding.BudgetItemCardBinding
 import com.javacat.easybudget.domain.models.BudgetItem
 import java.text.DateFormat
@@ -24,6 +26,7 @@ class MainAdapter(private val listener: OnListener
     override fun onBindViewHolder(holder: BudgetItemViewHolder, position: Int) {
         val budgetItem = getItem(position)
         holder.bind(budgetItem)
+        holder.itemView.setAnimation(AnimationUtils.loadAnimation(holder.itemView.context, R.anim.anim))
     }
 }
 

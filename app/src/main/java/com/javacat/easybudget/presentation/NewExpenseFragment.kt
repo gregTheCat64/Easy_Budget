@@ -24,7 +24,7 @@ class NewExpenseFragment : Fragment(), CategoryAdapter.Listener {
         savedInstanceState: Bundle?
     ): View? {
         val binding = FragmentNewExpenseBinding.inflate(inflater,container,false)
-        binding.expensesRecView.layoutManager = GridLayoutManager(context, 2)
+        binding.expensesRecView.layoutManager = GridLayoutManager(context, 1)
 
         val expenseCategList = ExpenseCategData().getAll()
         val adapter = CategoryAdapter(expenseCategList, this)

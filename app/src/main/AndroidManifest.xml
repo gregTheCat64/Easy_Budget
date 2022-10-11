@@ -13,7 +13,7 @@
         android:theme="@style/MyTheme.EasyBudget"
         tools:targetApi="31">
         <activity
-            android:name=".presentation.MonthlySpendingsActivity"
+            android:name=".presentation.RegularSpendingsActivity"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"

@@ -6,19 +6,24 @@ import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.google.gson.Gson
+import com.google.gson.*
 import com.google.gson.reflect.TypeToken
 import com.javacat.easybudget.domain.BudgetRepository
 import com.javacat.easybudget.domain.models.BudgetItem
 import com.javacat.easybudget.domain.models.Type
 import java.time.LocalDate
 import java.time.YearMonth
+import java.time.format.DateTimeFormatter
 import java.util.Calendar
 
 class BudgetRepositoryFileImpl(
     private val context: Context
 ) : BudgetRepository {
     private val gson = Gson()
+//    var gson = GsonBuilder()
+//        .setPrettyPrinting()
+//        .registerTypeAdapter(LocalDate::class.java, LocalDateAdapter())
+//        .create()
     private val type = TypeToken.getParameterized(List::class.java, BudgetItem::class.java).type
     private val filename = "budgetItems.json"
     private var budgetItems = emptyList<BudgetItem>()
@@ -127,7 +132,6 @@ class BudgetRepositoryFileImpl(
     }
 
 
-
     override fun removeById(id: Long) {
         budgetItems = budgetItems.filter { it.id != id }
         data.value = budgetItems
@@ -141,6 +145,7 @@ class BudgetRepositoryFileImpl(
     }
 
     override fun save(budgetItem: BudgetItem) {
+        Log.i("LIFE", "in repoSave: ${budgetItem.date}")
         Log.i("LIFE", "repo_save")
         lastId = budgetItems.maxOfOrNull { it.id }
         if (budgetItem.id == 0L){
@@ -165,8 +170,20 @@ class BudgetRepositoryFileImpl(
         Log.i("LIFE", "sync")
         context.openFileOutput(filename, Context.MODE_PRIVATE).bufferedWriter().use {
             it.write(gson.toJson(budgetItems))
-
         }
+    }
 
+    class LocalDateAdapter : JsonSerializer<LocalDate?> {
+        override fun serialize(
+            src: LocalDate?,
+            typeOfSrc: java.lang.reflect.Type?,
+            context: JsonSerializationContext?
+        ): JsonElement {
+            //val firstApiFormat = DateTimeFormatter.ofPattern("{\"day\":dd,\"month\":mm,\"year\":yyyy}")
+            return JsonPrimitive(src?.format(DateTimeFormatter.ISO_LOCAL_DATE)) // "yyyy-mm-dd"
+            //return JsonPrimitive(src?.format(firstApiFormat)) // "yyyy-mm-dd"
+        }
+       // "date":{"day":9,"month":10,"year":2022}
+        //("\"day\":dd,\"month\":mm,\"year\":yyyy")
     }
 }
