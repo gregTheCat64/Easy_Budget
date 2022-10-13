@@ -10,6 +10,8 @@ import com.javacat.easybudget.databinding.ActivityChartBinding
 import com.javacat.easybudget.domain.adapters.MainVpAdapter
 import com.javacat.easybudget.domain.viewmodels.BudgetViewModel
 import com.javacat.easybudget.presentation.*
+import java.text.DateFormat
+import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.util.*
 
@@ -33,26 +35,26 @@ class ChartActivity : AppCompatActivity() {
 
         //получаем текущий месяц
         //Календарь
-        val nowDate = LocalDate.now()
+        val nowDate = Calendar.getInstance()
         var currentDate = nowDate
 
-        //val dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM")
-        binding.currentMonth.text = "${currentDate.month}"
+        val month = SimpleDateFormat("MMMM, yyyy", Locale.getDefault())
+        binding.currentMonth.text = month.format(currentDate.time)
         budgetViewModel.setDay(currentDate)
         Log.i("TIME", "in Charts Activity: $currentDate")
 
         //кнопки взад вперед:
         binding.previousBtn.setOnClickListener {
-          currentDate = currentDate.minusMonths(1)
+          currentDate.add(Calendar.MONTH, 1)
             budgetViewModel.setDay(currentDate)
-            binding.currentMonth.text = "${currentDate.month}"
+            binding.currentMonth.text = month.format(currentDate.time)
 
         }
 
         binding.nextBtn.setOnClickListener {
-            currentDate = currentDate.plusMonths(1)
+            currentDate.add(Calendar.MONTH, -1)
             budgetViewModel.setDay(currentDate)
-            binding.currentMonth.text = "${currentDate.month}"
+            binding.currentMonth.text = month.format(currentDate.time)
         }
 
         val adapter = MainVpAdapter(this,fragList)

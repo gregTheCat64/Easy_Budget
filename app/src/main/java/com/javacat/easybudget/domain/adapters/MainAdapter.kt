@@ -22,6 +22,7 @@ class MainAdapter(private val listener: OnListener
             listener = listener
         )
     }
+    private var selectedPosition = -1
 
     override fun onBindViewHolder(holder: BudgetItemViewHolder, position: Int) {
         val budgetItem = getItem(position)
@@ -49,16 +50,15 @@ class BudgetItemViewHolder(
     private val listener: OnListener
 ): RecyclerView.ViewHolder(binding.root) {
     fun bind(budgetItem: BudgetItem){
-        val dateFormatter = DateFormat.getDateInstance(DateFormat.MEDIUM)
-
+        val dateFormatter = DateFormat.getDateInstance(DateFormat.LONG)
+        val date = budgetItem.date
         binding.apply {
             budgetItemName.text = budgetItem.name
             budgetItemPic.setImageResource(budgetItem.category.pic)
             budgetItemPrice.text = budgetItem.cost.toString()
-            budgetItemDate.text = budgetItem.date.toString()
+            budgetItemDate.text = dateFormatter.format(date.time)
             deleteBtn.setOnClickListener {
                 listener.onRemove(budgetItem)
-
             }
         }
     }

@@ -11,6 +11,7 @@ import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import com.google.android.material.tabs.TabLayoutMediator
+import com.javacat.easybudget.R
 import com.javacat.easybudget.databinding.ActivityNewItemBinding
 import com.javacat.easybudget.domain.adapters.MainVpAdapter
 import com.javacat.easybudget.domain.models.BudgetItem
@@ -18,6 +19,7 @@ import com.javacat.easybudget.domain.models.Category
 import com.javacat.easybudget.domain.models.Type
 import com.javacat.easybudget.domain.viewmodels.BudgetViewModel
 import com.javacat.easybudget.domain.viewmodels.CategoryViewModel
+import java.text.DateFormat
 import java.time.LocalDate
 import java.util.Calendar
 
@@ -42,22 +44,29 @@ class NewItemActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         //Календарь
-        var calendar = Calendar.getInstance()
+        val calendar = Calendar.getInstance()
         val year = calendar.get(Calendar.YEAR)
         val month = calendar.get(Calendar.MONTH)
         val day = calendar.get(Calendar.DAY_OF_MONTH)
+        val dateFormatter = DateFormat.getDateInstance(DateFormat.MEDIUM)
 //        val maxDate = Calendar.getInstance()
 //        maxDate.set(Calendar.DAY_OF_MONTH, day)
 
-        var choosenDate: LocalDate = LocalDate.now()
+
+        binding.radioGroup.setOnCheckedChangeListener { group, checkedId ->
+            when (checkedId){
+                R.id.twoDaysBeforeRadBtn ->  calendar.set(year,month,day.minus(2))
+                R.id.yesterdayRadBtn ->  calendar.set(year,month,day.minus(1))
+                R.id.todayRadBtn -> {calendar.set(year,month,day) }
+            }
+            binding.editTextDate.setText(dateFormatter.format(calendar.time))
+        }
 
 
         binding.calendarBtn.setOnClickListener {
             val dpd = DatePickerDialog(this, DatePickerDialog.OnDateSetListener{view, mYear, mMonth, mDay ->
-                binding.editTextDate.setText(""+ mDay +"/"+mMonth+"/"+mYear)
                 calendar.set(mYear,mMonth,mDay)
-                choosenDate = LocalDate.of(mYear,mMonth+1,mDay)
-                Log.i("MyCAL", "choosenDate: $choosenDate")
+                binding.editTextDate.setText(dateFormatter.format(calendar.time))
             }, year,month,day)
             dpd.show()
 
@@ -75,16 +84,17 @@ class NewItemActivity : AppCompatActivity() {
         }.attach()
 
         binding.addNewItemBtn.setOnClickListener {
-            save(choosenDate)
+            save(calendar)
         }
         binding.saveBtn.setOnClickListener {
-            save(choosenDate)
+            save(calendar)
         }
         binding.backBtn.setOnClickListener {
             startActivity(Intent(this, MainActivity::class.java))
         }
     }
-    private fun save(choosenDate:LocalDate){
+    private fun save(calendar: Calendar){
+        Log.i("LIFE", "saveBtn")
         var categoryOfItem: Category? = null
         var priceOfItem = 0
 
@@ -107,13 +117,13 @@ class NewItemActivity : AppCompatActivity() {
             Toast.makeText(applicationContext, "Выберите категорию", Toast.LENGTH_SHORT).show()
             return
         }
-        Log.i("MyCAL", "choosenDate: $choosenDate")
+        Log.i("MyCAL", "choosenDate: $calendar")
         budgetViewModel.save(BudgetItem(
             0,
             nameOfItem,
             categoryOfItem,
             priceOfItem,
-            date = choosenDate
+            date = calendar
         ))
         val intent = Intent(this, MainActivity::class.java)
         startActivity(intent)

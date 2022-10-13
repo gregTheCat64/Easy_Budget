@@ -54,7 +54,7 @@ class Charts {
 
             pieChart.legend.textSize = 12f
             pieChart.description.isEnabled = false
-            pieChart.centerText = "${expenses.toInt()} руб."
+            //pieChart.centerText = "${expenses.toInt()} руб."
             pieChart.invalidate()
         }
     }

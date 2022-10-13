@@ -1,8 +1,6 @@
 package com.javacat.easybudget.presentation
 
-import android.app.DatePickerDialog
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -11,25 +9,18 @@ import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.javacat.easybudget.R
 import com.javacat.easybudget.data.ExpenseCategData
-import com.javacat.easybudget.databinding.ActivityRegularSpendingsBinding
-import com.javacat.easybudget.databinding.FragmentExpensesChartBinding
 import com.javacat.easybudget.databinding.FragmentRegularExpensesBinding
 import com.javacat.easybudget.domain.adapters.MainAdapter
 import com.javacat.easybudget.domain.adapters.OnListener
-import com.javacat.easybudget.domain.models.BudgetEconomy
 import com.javacat.easybudget.domain.models.BudgetItem
 import com.javacat.easybudget.domain.models.Category
 import com.javacat.easybudget.domain.viewmodels.BudgetViewModel
-import com.javacat.easybudget.domain.viewmodels.RegularSpendingsViewModel
-import java.time.LocalDate
 import java.util.Calendar
 
 class RegularExpensesFragment : Fragment() {
 
     lateinit var binding: FragmentRegularExpensesBinding
-    private val regularSpendingsViewModel: RegularSpendingsViewModel by activityViewModels()
     private val budgetViewModel: BudgetViewModel by activityViewModels()
 
     //val regularExpenses = listOf<String>("Кредит", "Ипотека", "Коммунальные платежи","Учеба", "Алименты", "Другое")
@@ -51,21 +42,23 @@ class RegularExpensesFragment : Fragment() {
         val mainAdapter = MainAdapter(
             object : OnListener{
                 override fun onRemove(budgetItem: BudgetItem) {
-                    regularSpendingsViewModel.removeById(budgetItem.id)
+                    budgetViewModel.removeRegById(budgetItem.id)
                     binding.regExpRecView.smoothScrollToPosition(0)
                     Toast.makeText(context, "Удалено", Toast.LENGTH_SHORT).show()
                     budgetViewModel.getCurrentBalance()
-                    regularSpendingsViewModel.getSumRecommended()
-                    regularSpendingsViewModel.updateLists()
+                    budgetViewModel.getSumRecommended()
+                    //budgetViewModel.updateRegLists()
                 }
             }
         )
         binding.regExpRecView.adapter = mainAdapter
-        regularSpendingsViewModel.getRegExpenses().observe(viewLifecycleOwner) {
+        budgetViewModel.getRegExpenses().observe(viewLifecycleOwner) {
             mainAdapter.submitList(it)
         }
 
-        val choosenDate = LocalDate.of(2022, 10, 10)
+        //val choosenDate = LocalDate.of(2022, 10, 10)
+        val choosenDate = Calendar.getInstance()
+        choosenDate.set(2022,9,10)
 
 
         binding.addBtn.setOnClickListener {
@@ -80,7 +73,7 @@ class RegularExpensesFragment : Fragment() {
                 return@setOnClickListener
             }
             if (category != null){
-                regularSpendingsViewModel.save(
+                budgetViewModel.saveRegItem(
                     BudgetItem(
                         0,
                         name = category.name,
@@ -89,10 +82,10 @@ class RegularExpensesFragment : Fragment() {
                         cost = priceOfItem
                     )
                 )
-                regularSpendingsViewModel.regularExpenses
+                budgetViewModel.regularExpenses
                 binding.priceOfBudgetItem.setText("")
-                regularSpendingsViewModel.save(choosenDate)
-                regularSpendingsViewModel.getSumRecommended()
+                budgetViewModel.saveStartDate(choosenDate)
+                budgetViewModel.getSumRecommended()
 
             }else return@setOnClickListener
         }

@@ -1,8 +1,6 @@
 package com.javacat.easybudget.presentation
 
-import android.app.DatePickerDialog
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -11,24 +9,19 @@ import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.javacat.easybudget.data.ExpenseCategData
 import com.javacat.easybudget.data.IncomeCategData
-import com.javacat.easybudget.databinding.FragmentRegularExpensesBinding
 import com.javacat.easybudget.databinding.FragmentRegularIncomesBinding
 import com.javacat.easybudget.domain.adapters.MainAdapter
 import com.javacat.easybudget.domain.adapters.OnListener
 import com.javacat.easybudget.domain.models.BudgetItem
 import com.javacat.easybudget.domain.models.Category
 import com.javacat.easybudget.domain.viewmodels.BudgetViewModel
-import com.javacat.easybudget.domain.viewmodels.RegularSpendingsViewModel
-import java.time.LocalDate
 import java.util.*
 
 
 class RegularIncomesFragment : Fragment() {
 
     lateinit var binding: FragmentRegularIncomesBinding
-    private val regularSpendingsViewModel: RegularSpendingsViewModel by activityViewModels()
     private val budgetViewModel: BudgetViewModel by activityViewModels()
 
     override fun onCreateView(
@@ -45,21 +38,21 @@ class RegularIncomesFragment : Fragment() {
         val mainAdapter = MainAdapter(
             object : OnListener {
                 override fun onRemove(budgetItem: BudgetItem) {
-                    regularSpendingsViewModel.removeById(budgetItem.id)
+                    budgetViewModel.removeRegById(budgetItem.id)
                     binding.regIncRecView.smoothScrollToPosition(0)
                     Toast.makeText(context, "Удалено", Toast.LENGTH_SHORT).show()
                     budgetViewModel.getCurrentBalance()
-                    regularSpendingsViewModel.getSumRecommended()
-                    regularSpendingsViewModel.updateLists()
+                    budgetViewModel.getSumRecommended()
+                    budgetViewModel.updateRegLists()
                 }
             }
         )
         binding.regIncRecView.adapter = mainAdapter
-        regularSpendingsViewModel.getIncExpenses().observe(viewLifecycleOwner) {
+        budgetViewModel.getIncExpenses().observe(viewLifecycleOwner) {
             mainAdapter.submitList(it)
         }
 
-        var choosenDate = LocalDate.now()
+        var choosenDate = Calendar.getInstance()
 
 
         binding.addBtn.setOnClickListener {
@@ -74,7 +67,7 @@ class RegularIncomesFragment : Fragment() {
                 return@setOnClickListener
             }
             if (category != null){
-                regularSpendingsViewModel.save(
+                budgetViewModel.saveRegItem(
                     BudgetItem(
                         0,
                         name = category.name,
@@ -85,8 +78,8 @@ class RegularIncomesFragment : Fragment() {
                 )
 
                 binding.priceOfBudgetItem.setText("")
-                //regularSpendingsViewModel.saveStartDate(choosenDate)
-                regularSpendingsViewModel.getSumRecommended()
+                budgetViewModel.saveStartDate(choosenDate)
+                budgetViewModel.getSumRecommended()
             }else return@setOnClickListener
         }
 

@@ -20,10 +20,7 @@ class BudgetRepositoryFileImpl(
     private val context: Context
 ) : BudgetRepository {
     private val gson = Gson()
-//    var gson = GsonBuilder()
-//        .setPrettyPrinting()
-//        .registerTypeAdapter(LocalDate::class.java, LocalDateAdapter())
-//        .create()
+
     private val type = TypeToken.getParameterized(List::class.java, BudgetItem::class.java).type
     private val filename = "budgetItems.json"
     private var budgetItems = emptyList<BudgetItem>()
@@ -34,7 +31,7 @@ class BudgetRepositoryFileImpl(
     private val expenseDataByDay = MutableLiveData<List<BudgetItem>>()
     private val incomeDataByDay = MutableLiveData<List<BudgetItem>>()
 
-    var currentDate = MutableLiveData<LocalDate>()
+    var currentDate = MutableLiveData<Calendar>()
 
     private var lastId: Long? = 0L
 
@@ -56,7 +53,7 @@ class BudgetRepositoryFileImpl(
     }
 
     override fun getAll(): LiveData<List<BudgetItem>>{
-        Log.i("REPO", "getAll")
+        Log.i("LIFE", "repo getAll")
         return data
     }
 
@@ -72,8 +69,8 @@ class BudgetRepositoryFileImpl(
     private fun updateExpensesByMonth(){
         Log.i("REPO", "updateExpByMonth")
         val expenses = budgetItems.filter { it.category.type == Type.EXPENSES
-                && it.date.month == currentDate.value?.month
-                && it.date.year == currentDate.value?.year}
+                && it.date.get(Calendar.MONTH) == currentDate.value?.get(Calendar.MONTH)
+                && it.date.get(Calendar.YEAR) == currentDate.value?.get(Calendar.YEAR)}
         Log.i("REPO", "budgetITems in updateByMonth: $expenses")
         Log.i("REPO", "currentDate in updateByMonth: ${currentDate.value}")
 
@@ -83,13 +80,13 @@ class BudgetRepositoryFileImpl(
 
     private fun updateIncomesByMonth(){
         val incomes= budgetItems.filter { it.category.type == Type.INCOMES
-                && it.date.month == currentDate.value?.month
-                && it.date.year == currentDate.value?.year}
+                && it.date.get(Calendar.MONTH) == currentDate.value?.get(Calendar.MONTH)
+                && it.date.get(Calendar.YEAR) == currentDate.value?.get(Calendar.YEAR)}
         incomeDataByMonth.value = incomes
     }
 
 
-    override fun setCurrentDay(date: LocalDate) {
+    override fun setCurrentDay(date: Calendar) {
         Log.i("REPO", "setCurrentDay")
         currentDate.value = date
         updateExpensesByDay()
@@ -111,9 +108,9 @@ class BudgetRepositoryFileImpl(
         Log.i("REPO", "updateIncByDay")
         Log.i("REPO", "budgetITems in updateByDay: $budgetItems")
         val incomes = budgetItems.filter { it.category.type == Type.INCOMES
-                && it.date.dayOfMonth == currentDate.value?.dayOfMonth
-                && it.date.month == currentDate.value?.month
-                && it.date.year == currentDate.value?.year
+                && it.date.get(Calendar.DATE) == currentDate.value?.get(Calendar.DATE)
+                && it.date.get(Calendar.MONTH) == currentDate.value?.get(Calendar.MONTH)
+                && it.date.get(Calendar.YEAR) == currentDate.value?.get(Calendar.YEAR)
         }
         Log.i("REPO", "currentDate in updateByDay: ${currentDate.value}")
         incomeDataByDay.value = incomes
@@ -122,9 +119,9 @@ class BudgetRepositoryFileImpl(
     private fun updateExpensesByDay(){
         Log.i("LIFE", "updateExpByDay")
         val expenses = budgetItems.filter { it.category.type == Type.EXPENSES
-                && it.date.dayOfMonth == currentDate.value?.dayOfMonth
-                && it.date.month == currentDate.value?.month
-                && it.date.year == currentDate.value?.year
+                && it.date.get(Calendar.DATE) == currentDate.value?.get(Calendar.DATE)
+                && it.date.get(Calendar.MONTH) == currentDate.value?.get(Calendar.MONTH)
+                && it.date.get(Calendar.YEAR) == currentDate.value?.get(Calendar.YEAR)
         }
         Log.i("TIME", "budgetDate: ${currentDate.value}")
         Log.i("TIME", "filterDate: ${expenses}")

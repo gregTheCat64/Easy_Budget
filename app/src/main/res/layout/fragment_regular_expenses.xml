@@ -18,12 +18,13 @@
 
     <Button
         android:id="@+id/addBtn"
-        style="@style/Widget.Material3.Button.ElevatedButton"
+        style="@style/Widget.Material3.Button.ElevatedButton.Icon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/large_space"
         android:layout_marginTop="16dp"
         tools:icon="@drawable/ic_baseline_add_24"
+        android:src="@drawable/ic_baseline_add_24"
         android:text="Добавить"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
@@ -32,7 +33,7 @@
 
     <Spinner
         android:id="@+id/regExpSpinner"
-        android:layout_width="wrap_content"
+        android:layout_width="140dp"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/large_space"
         app:layout_constraintBottom_toBottomOf="@+id/priceOfBudgetItem"

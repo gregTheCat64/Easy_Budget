@@ -8,7 +8,6 @@
     tools:context=".presentation.RegularSpendingsActivity">
 
 
-
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
@@ -23,6 +22,50 @@
 
 
     </com.google.android.material.appbar.AppBarLayout>
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/infoCardView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:cardCornerRadius="@dimen/small_space"
+        android:layout_margin="@dimen/small_space"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar"
+        app:layout_constraintStart_toStartOf="parent"
+        >
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:id="@+id/sumIncTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Сумма доходов:"
+                android:layout_margin="@dimen/common_space"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/sumExpTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Сумма расходов:"
+                android:layout_margin="@dimen/common_space"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/sumIncTextView" />
+
+            <TextView
+                android:id="@+id/sumRecToSpend"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Лимит на день:"
+                android:layout_margin="@dimen/common_space"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    </androidx.cardview.widget.CardView>
 
     <ImageButton
         android:id="@+id/toMainBtn"
@@ -41,39 +84,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Регулярные расходы/доходы"
-        android:textSize="16sp"
+        android:textColor="@color/white"
+        android:textSize="18sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="@+id/toolbar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/toolbar"
         app:layout_constraintTop_toTopOf="@+id/toolbar" />
-
-    <TextView
-        android:id="@+id/sumIncTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Сумма доходов:"
-        android:layout_margin="@dimen/common_space"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar" />
-
-    <TextView
-        android:id="@+id/sumExpTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Сумма расходов:"
-        android:layout_margin="@dimen/common_space"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/sumIncTextView" />
-
-    <TextView
-        android:id="@+id/sumRecToSpend"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Лимит на день:"
-        android:layout_margin="@dimen/common_space"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar" />
 
 
     <com.google.android.material.tabs.TabLayout
@@ -82,7 +99,7 @@
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/sumExpTextView">
+        app:layout_constraintTop_toBottomOf="@+id/infoCardView">
 
         <com.google.android.material.tabs.TabItem
 
@@ -107,16 +124,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tabLayout" />
-
-    <Button
-        android:id="@+id/addNewItemBtn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Сохранить"
-        android:layout_margin="@dimen/common_space"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
-
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -14,14 +14,12 @@ import com.javacat.easybudget.databinding.ActivityMainBinding
 import com.javacat.easybudget.databinding.StartBudgetDialogBinding
 import com.javacat.easybudget.domain.adapters.MainVpAdapter
 import com.javacat.easybudget.domain.viewmodels.BudgetViewModel
-import com.javacat.easybudget.domain.viewmodels.RegularSpendingsViewModel
 import com.javacat.easybudget.utils.AndroidUtils
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
+import java.text.DateFormat
+import java.util.Calendar
 
 class MainActivity : AppCompatActivity() {
     private val budgetViewModel: BudgetViewModel by viewModels()
-    private val regularSpendingsViewModel:RegularSpendingsViewModel by viewModels()
 
     private val fragList = listOf(
         ExpensesFragment.newInstance(),
@@ -35,10 +33,11 @@ class MainActivity : AppCompatActivity() {
     private val PREF_IS_NEW = "isNewUser"
 
     private lateinit var binding: ActivityMainBinding
-    private var currentDate: LocalDate = LocalDate.now()
+    private val todayDate = Calendar.getInstance()
+    private var currentDate = Calendar.getInstance()
     private var startBudgetValue = 0
     private var currentBudgetValue: Int? = startBudgetValue
-    private var budgetEconomyValue = 0
+    private var sumToRecommend = 0
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -51,11 +50,14 @@ class MainActivity : AppCompatActivity() {
 
         //получаем текущий месяц
         //Календарь
-//        val localDate = LocalDate.now()
-//        var currentDate = localDate
 
         budgetViewModel.setDay(currentDate)
         Log.i("TIME", "date in main$currentDate")
+
+        //проверка работы подсчета рек.суммы:
+        val startDate = Calendar.getInstance()
+        startDate.set(2021,9,13)
+        budgetViewModel.saveStartDate(startDate)
 
         //получаем тек. баланс
         budgetViewModel.getCurrentBalance().observe(this) {
@@ -65,8 +67,8 @@ class MainActivity : AppCompatActivity() {
         }
 
 
-        regularSpendingsViewModel.getSumRecommended().observe(this){
-            budgetEconomyValue = it
+        budgetViewModel.getSumRecommended().observe(this) {
+            sumToRecommend = it
             Log.i("LIFE", "getSUMRecOBSERVER")
             updateUi()
         }
@@ -86,13 +88,13 @@ class MainActivity : AppCompatActivity() {
 
         //кнопки взад вперед:
         binding.previousBtn.setOnClickListener {
-            currentDate = currentDate.minusDays(1)
+            currentDate.add(Calendar.DAY_OF_MONTH, -1)
             budgetViewModel.setDay(currentDate)
             updateUi()
         }
 
         binding.nextBtn.setOnClickListener {
-            currentDate = currentDate.plusDays(1)
+            currentDate.add(Calendar.DAY_OF_MONTH, 1)
             budgetViewModel.setDay(currentDate)
             updateUi()
         }
@@ -160,17 +162,16 @@ class MainActivity : AppCompatActivity() {
     private fun updateUi() {
         Log.i("LIFE", "updateUi")
         binding.startBalance.text = currentBudgetValue.toString()
-        binding.RecSumTextView.text = budgetEconomyValue.toString()
-        val dateFormatter = DateTimeFormatter.ofPattern("dd MMMM yy")
-        var formattedDate = currentDate.format(dateFormatter)
-        binding.currentDay.text = "$formattedDate"
+        binding.RecSumTextView.text = sumToRecommend.toString()
+        val dateFormatter = DateFormat.getDateInstance(DateFormat.MEDIUM)
+        binding.currentDay.text = dateFormatter.format(currentDate.time)
 
-        if (currentDate == LocalDate.now()) {
+        if (currentDate == todayDate) {
             binding.nextBtn.visibility = View.INVISIBLE
         } else binding.nextBtn.visibility = View.VISIBLE
-        Log.i("MYLOG", "budgetvalue: $budgetEconomyValue")
-                if (budgetEconomyValue == 0) {
+        Log.i("MYLOG", "budgetvalue: $sumToRecommend")
 
+        if (sumToRecommend == 0) {
             binding.cardViewTextView.text = "Нажмите на карточку, чтобы добавить регулярные расходы"
             binding.RecSumTextView.visibility = View.INVISIBLE
         } else {
