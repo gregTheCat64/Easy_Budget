@@ -23,10 +23,10 @@ class NewIncomeFragment : Fragment(), CategoryAdapter.Listener {
         savedInstanceState: Bundle?
     ): View? {
         val binding = FragmentNewIncomeBinding.inflate(inflater, container, false)
-        binding.incomesRecView.layoutManager = GridLayoutManager(context, 2)
+        binding.incomesRecView.layoutManager = GridLayoutManager(context, 4)
 
         val incomeCategList = IncomeCategData().getAll()
-        val adapter = CategoryAdapter(incomeCategList, this)
+        val adapter = CategoryAdapter(incomeCategList, this,requireContext())
         binding.incomesRecView.adapter = adapter
 
         return binding.root

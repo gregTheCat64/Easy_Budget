@@ -52,6 +52,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
+        android:ems="4"
         android:hint="сумма, р"
         android:inputType="number"
         app:layout_constraintStart_toStartOf="parent"
@@ -63,6 +64,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
+        android:ems="5"
         android:hint="описание"
         app:layout_constraintStart_toStartOf="@+id/priceOfBudgetItem"
         app:layout_constraintTop_toBottomOf="@+id/priceOfBudgetItem" />
@@ -139,15 +141,18 @@
         android:id="@+id/editTextDate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:editable="false"
         android:ems="6"
+        android:focusable="auto"
+        android:focusableInTouchMode="false"
         android:hint="дата"
-        android:inputType="date"
         app:layout_constraintBottom_toBottomOf="@+id/nameOfBudgetItem"
         app:layout_constraintEnd_toStartOf="@+id/calendarBtn" />
 
     <ImageButton
         android:id="@+id/calendarBtn"
         style="@style/Widget.Material3.Button.IconButton"
+        app:tint="@color/secondary_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/ic_baseline_calendar_month_24"
@@ -173,6 +178,7 @@
             android:background="@drawable/radio_btn_selector"
             android:button="@null"
             android:padding="4dp"
+            android:textColor="@color/secondary_text"
             android:text="Позавчера" />
 
         <RadioButton
@@ -183,7 +189,8 @@
             android:background="@drawable/radio_btn_selector"
             android:button="@null"
             android:padding="4dp"
-            android:text="Вчера" />
+            android:text="Вчера"
+            android:textColor="@color/secondary_text"/>
 
         <RadioButton
             android:id="@+id/todayRadBtn"
@@ -194,6 +201,7 @@
             android:button="@null"
             android:checked="true"
             android:padding="4dp"
+            android:textColor="@color/secondary_text"
             android:text="Сегодня" />
     </RadioGroup>
 

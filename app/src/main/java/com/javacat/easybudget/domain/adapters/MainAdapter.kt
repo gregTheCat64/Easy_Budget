@@ -1,5 +1,6 @@
 package com.javacat.easybudget.domain.adapters
 
+import android.content.res.Resources
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -22,12 +23,13 @@ class MainAdapter(private val listener: OnListener
             listener = listener
         )
     }
-    private var selectedPosition = -1
+
 
     override fun onBindViewHolder(holder: BudgetItemViewHolder, position: Int) {
         val budgetItem = getItem(position)
         holder.bind(budgetItem)
         holder.itemView.setAnimation(AnimationUtils.loadAnimation(holder.itemView.context, R.anim.anim))
+
     }
 }
 

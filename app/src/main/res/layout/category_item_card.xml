@@ -1,24 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
+    app:cardCornerRadius="@dimen/large_space"
+    android:layout_margin="@dimen/common_space"
+    android:layout_width="82dp"
+    android:layout_height="82dp"
     tools:context=".presentation.NewExpenseFragment">
 
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-    <Button
-        android:id="@+id/categoryItem"
-        style="@style/Widget.Material3.Button.OutlinedButton.Icon"
-        android:src="@drawable/expenses_shopping_cart_48"
-        tools:icon = "@drawable/expenses_shopping_cart_48"
-        android:drawableTint="@color/secondary_text"
-        android:textColor="@color/secondary_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Продукты"
-        />
+        <ImageView
+            android:id="@+id/categoryItemImage"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_marginTop="@dimen/small_space"
+            android:drawableTint="@color/secondary_text"
+            android:src="@drawable/expenses_shopping_cart_48"
+            app:layout_constraintBottom_toTopOf="@+id/categoryItemText"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:tint="@color/secondary_text"
+            tools:icon="@drawable/expenses_shopping_cart_48" />
+
+        <TextView
+            android:id="@+id/categoryItemText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/small_space"
+            android:gravity="center_horizontal"
+            android:text="Продукты"
+            android:textSize="8sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 
-</LinearLayout>
+
+
+</androidx.cardview.widget.CardView>

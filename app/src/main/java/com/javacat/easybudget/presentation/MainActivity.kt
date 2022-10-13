@@ -56,7 +56,7 @@ class MainActivity : AppCompatActivity() {
 
         //проверка работы подсчета рек.суммы:
         val startDate = Calendar.getInstance()
-        startDate.set(2021,9,13)
+        startDate.set(2022,9,12)
         budgetViewModel.saveStartDate(startDate)
 
         //получаем тек. баланс

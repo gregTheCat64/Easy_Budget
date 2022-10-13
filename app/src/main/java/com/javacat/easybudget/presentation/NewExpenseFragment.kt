@@ -24,10 +24,10 @@ class NewExpenseFragment : Fragment(), CategoryAdapter.Listener {
         savedInstanceState: Bundle?
     ): View? {
         val binding = FragmentNewExpenseBinding.inflate(inflater,container,false)
-        binding.expensesRecView.layoutManager = GridLayoutManager(context, 1)
+        binding.expensesRecView.layoutManager = GridLayoutManager(context, 4)
 
         val expenseCategList = ExpenseCategData().getAll()
-        val adapter = CategoryAdapter(expenseCategList, this)
+        val adapter = CategoryAdapter(expenseCategList, this, requireContext())
         binding.expensesRecView.adapter = adapter
 
         return binding.root
