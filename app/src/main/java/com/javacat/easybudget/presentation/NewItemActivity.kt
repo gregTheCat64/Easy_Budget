@@ -34,7 +34,7 @@ class NewItemActivity : AppCompatActivity() {
         "Расходы",
         "Доходы"
     )
-    var category:Category = Category("",0, Type.EXPENSES)
+    var category:Category = Category(0,"",0, Type.EXPENSES)
 
     private lateinit var binding: ActivityNewItemBinding
 

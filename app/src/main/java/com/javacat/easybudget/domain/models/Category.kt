@@ -1,7 +1,7 @@
 package com.javacat.easybudget.domain.models
 
-class Category(
-    val id: Int,
+data class Category(
+    var id: Int,
     val name: String,
     val pic: Int,
     val type: Type

@@ -5,13 +5,12 @@ import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.javacat.easybudget.data.BalanceRepositoryImpl
-import com.javacat.easybudget.data.BudgetRepositoryFileImpl
-import com.javacat.easybudget.data.RegularRepositoryImpl
-import com.javacat.easybudget.data.StartDateSavingsRepository
+import com.javacat.easybudget.data.*
 import com.javacat.easybudget.domain.BudgetRepository
+import com.javacat.easybudget.domain.ExpCatsRepository
 import com.javacat.easybudget.domain.RegularRepository
 import com.javacat.easybudget.domain.models.BudgetItem
+import com.javacat.easybudget.domain.models.Category
 import com.javacat.easybudget.domain.models.Type
 import org.intellij.lang.annotations.JdkConstants.CalendarMonth
 import java.util.Calendar
@@ -24,6 +23,7 @@ class BudgetViewModel(application: Application) : AndroidViewModel(application) 
     private val startBalanceRepository = BalanceRepositoryImpl(context = application)
     private val regularRepository: RegularRepository = RegularRepositoryImpl(context = application)
     private val startDateSavingsRepository = StartDateSavingsRepository(context = application)
+    private val expCatsRepository: ExpCatsRepository = ExpCatsRepositoryImpl(context = application)
 
     val data = budgetRepository.getAll()
     val expensesDataByMonth = budgetRepository.getExpensesByMonth()
@@ -35,6 +35,8 @@ class BudgetViewModel(application: Application) : AndroidViewModel(application) 
     private val sumRecommended = MutableLiveData<Int>()
 
     private val regData = regularRepository.getAll()
+
+    private val expCatList = expCatsRepository.getAll()
 
 
     var regularExpenses = 0
@@ -114,6 +116,14 @@ class BudgetViewModel(application: Application) : AndroidViewModel(application) 
 
     fun saveStartDate(startDate: Calendar){
         startDateSavingsRepository.saveStartDate(startDate)
+    }
+
+    fun getExpCats():LiveData<List<Category>>{
+       return expCatsRepository.getAll()
+    }
+
+    fun saveExpCat(category: Category){
+        expCatsRepository.save(category)
     }
 
 

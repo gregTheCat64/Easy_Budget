@@ -25,8 +25,10 @@ class NewExpenseFragment : Fragment(), CategoryAdapter.Listener {
     ): View? {
         val binding = FragmentNewExpenseBinding.inflate(inflater,container,false)
         binding.expensesRecView.layoutManager = GridLayoutManager(context, 4)
-
-        val expenseCategList = ExpenseCategData().getAll()
+        var expenseCategList: List<Category> = emptyList()
+        budgetViewModel.getExpCats().observe(requireActivity(),{
+        expenseCategList = it
+        })
         val adapter = CategoryAdapter(expenseCategList, this, requireContext())
         binding.expensesRecView.adapter = adapter
 
@@ -34,6 +36,7 @@ class NewExpenseFragment : Fragment(), CategoryAdapter.Listener {
     }
 
     override fun onClick(category: Category) {
+        budgetViewModel.saveExpCat(category)
         categViewModel.save(category)
 
     }
