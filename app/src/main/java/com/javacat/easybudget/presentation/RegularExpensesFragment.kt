@@ -50,15 +50,15 @@ class RegularExpensesFragment : Fragment() {
                     //budgetViewModel.updateRegLists()
                 }
             }
-        )
+        ,requireContext())
         binding.regExpRecView.adapter = mainAdapter
         budgetViewModel.getRegExpenses().observe(viewLifecycleOwner) {
             mainAdapter.submitList(it)
         }
 
-        //val choosenDate = LocalDate.of(2022, 10, 10)
+
         val choosenDate = Calendar.getInstance()
-        choosenDate.set(2022,9,10)
+        choosenDate.set(2022,9,14)
 
 
         binding.addBtn.setOnClickListener {

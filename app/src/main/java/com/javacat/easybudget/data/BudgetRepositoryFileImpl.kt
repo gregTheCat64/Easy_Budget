@@ -30,6 +30,7 @@ class BudgetRepositoryFileImpl(
     private val incomeDataByMonth = MutableLiveData<List<BudgetItem>>()
     private val expenseDataByDay = MutableLiveData<List<BudgetItem>>()
     private val incomeDataByDay = MutableLiveData<List<BudgetItem>>()
+    private val commonDataByDay = MutableLiveData<List<BudgetItem>>()
 
     var currentDate = MutableLiveData<Calendar>()
 
@@ -93,6 +94,7 @@ class BudgetRepositoryFileImpl(
         updateIncomesByDay()
         updateExpensesByMonth()
         updateIncomesByMonth()
+        updateCommonByDay()
     }
 
     override fun getIncomesByDay(): LiveData<List<BudgetItem>> = incomeDataByDay
@@ -103,6 +105,8 @@ class BudgetRepositoryFileImpl(
         updateExpensesByDay()
         return expenseDataByDay
     }
+
+    override fun getCommonByDay(): LiveData<List<BudgetItem>> = commonDataByDay
 
     private fun updateIncomesByDay(){
         Log.i("REPO", "updateIncByDay")
@@ -128,6 +132,13 @@ class BudgetRepositoryFileImpl(
         expenseDataByDay.value = expenses
     }
 
+    private fun updateCommonByDay(){
+        val commons = budgetItems.filter { it.date.get(Calendar.DATE) == currentDate.value?.get(Calendar.DATE)
+                && it.date.get(Calendar.MONTH) == currentDate.value?.get(Calendar.MONTH)
+                && it.date.get(Calendar.YEAR) == currentDate.value?.get(Calendar.YEAR) }
+        commonDataByDay.value = commons
+    }
+
 
     override fun removeById(id: Long) {
         budgetItems = budgetItems.filter { it.id != id }
@@ -135,8 +146,7 @@ class BudgetRepositoryFileImpl(
         Log.i("LIFE", "repo_remove")
 //        updateExpensesByMonth()
 //        updateIncomesByMonth()
-        updateExpensesByDay()
-        updateIncomesByDay()
+        updateCommonByDay()
         sync()
 
     }

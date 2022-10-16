@@ -12,9 +12,7 @@ import com.javacat.easybudget.domain.RegularRepository
 import com.javacat.easybudget.domain.models.BudgetItem
 import com.javacat.easybudget.domain.models.Category
 import com.javacat.easybudget.domain.models.Type
-import org.intellij.lang.annotations.JdkConstants.CalendarMonth
 import java.util.Calendar
-import java.util.Date
 import kotlin.math.roundToInt
 
 class BudgetViewModel(application: Application) : AndroidViewModel(application) {
@@ -35,6 +33,7 @@ class BudgetViewModel(application: Application) : AndroidViewModel(application) 
     private val sumRecommended = MutableLiveData<Int>()
 
     private val regData = regularRepository.getAll()
+    private val byDayData = MutableLiveData<List<BudgetItem>>()
 
     private val expCatList = expCatsRepository.getAll()
 
@@ -53,6 +52,8 @@ class BudgetViewModel(application: Application) : AndroidViewModel(application) 
     }
 
     fun removeById(id: Long) = budgetRepository.removeById(id)
+
+    fun getAllByDay():LiveData<List<BudgetItem>> = budgetRepository.getCommonByDay()
 
     fun setDay(date: Calendar) {
         budgetRepository.setCurrentDay(date)

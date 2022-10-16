@@ -10,6 +10,7 @@ import android.util.Log
 import android.view.View
 import androidx.activity.viewModels
 import com.google.android.material.tabs.TabLayoutMediator
+import com.javacat.easybudget.R
 import com.javacat.easybudget.databinding.ActivityMainBinding
 import com.javacat.easybudget.databinding.StartBudgetDialogBinding
 import com.javacat.easybudget.domain.adapters.MainVpAdapter
@@ -21,14 +22,6 @@ import java.util.Calendar
 class MainActivity : AppCompatActivity() {
     private val budgetViewModel: BudgetViewModel by viewModels()
 
-    private val fragList = listOf(
-        ExpensesFragment.newInstance(),
-        IncomesFragment.newInstance()
-    )
-    private val fragListTitles = listOf(
-        "Расходы",
-        "Доходы"
-    )
     private val PREFS_FILE = "PrefFile"
     private val PREF_IS_NEW = "isNewUser"
 
@@ -57,7 +50,7 @@ class MainActivity : AppCompatActivity() {
         //проверка работы подсчета рек.суммы:
         val startDate = Calendar.getInstance()
         startDate.set(2022,9,12)
-        budgetViewModel.saveStartDate(startDate)
+        //budgetViewModel.saveStartDate(startDate)
 
         //получаем тек. баланс
         budgetViewModel.getCurrentBalance().observe(this) {
@@ -99,16 +92,12 @@ class MainActivity : AppCompatActivity() {
             updateUi()
         }
 
-        //адаптер
-        val adapter = MainVpAdapter(this, fragList)
-        binding.mainViewPager.adapter = adapter
-        //настройка вкладок
-        TabLayoutMediator(binding.tabLayout, binding.mainViewPager) { tab, pos ->
-            tab.text = fragListTitles[pos]
-        }.attach()
+
 
         binding.addBtn.setOnClickListener {
             startActivity(Intent(this, NewItemActivity::class.java))
+//            supportFragmentManager
+//                .beginTransaction().replace(R.id.mainViewPager,NewExpenseFragment.newInstance()).commit()
         }
 
         binding.toChartsBtn.setOnClickListener {

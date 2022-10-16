@@ -2,7 +2,6 @@ package com.javacat.easybudget.domain
 
 import androidx.lifecycle.LiveData
 import com.javacat.easybudget.domain.models.BudgetItem
-import java.time.LocalDate
 import java.util.Calendar
 
 interface BudgetRepository {
@@ -13,5 +12,6 @@ interface BudgetRepository {
     fun getExpensesByMonth():LiveData<List<BudgetItem>>
     fun getIncomesByDay():LiveData<List<BudgetItem>>
     fun getExpensesByDay():LiveData<List<BudgetItem>>
+    fun getCommonByDay():LiveData<List<BudgetItem>>
     fun setCurrentDay(date:Calendar)
 }

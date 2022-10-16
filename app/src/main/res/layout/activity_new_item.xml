@@ -51,23 +51,24 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:ems="4"
+        android:layout_marginTop="8dp"
+        android:ems="6"
         android:hint="сумма, р"
         android:inputType="number"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar" />
+        app:layout_constraintTop_toBottomOf="@+id/editTextDate" />
 
 
     <EditText
         android:id="@+id/nameOfBudgetItem"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+        android:layout_marginEnd="16dp"
         android:ems="5"
         android:hint="описание"
-        app:layout_constraintStart_toStartOf="@+id/priceOfBudgetItem"
-        app:layout_constraintTop_toBottomOf="@+id/priceOfBudgetItem" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/editTextDate"
+        app:layout_constraintTop_toTopOf="@+id/priceOfBudgetItem" />
 
     <TextView
         android:id="@+id/categoriesTextView"
@@ -141,13 +142,14 @@
         android:id="@+id/editTextDate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
         android:editable="false"
         android:ems="6"
         android:focusable="auto"
         android:focusableInTouchMode="false"
         android:hint="дата"
-        app:layout_constraintBottom_toBottomOf="@+id/nameOfBudgetItem"
-        app:layout_constraintEnd_toStartOf="@+id/calendarBtn" />
+        app:layout_constraintEnd_toStartOf="@+id/calendarBtn"
+        app:layout_constraintTop_toBottomOf="@+id/radioGroup" />
 
     <ImageButton
         android:id="@+id/calendarBtn"
@@ -178,8 +180,8 @@
             android:background="@drawable/radio_btn_selector"
             android:button="@null"
             android:padding="4dp"
-            android:textColor="@color/secondary_text"
-            android:text="Позавчера" />
+            android:text="Позавчера"
+            android:textColor="@color/secondary_text" />
 
         <RadioButton
             android:id="@+id/yesterdayRadBtn"
@@ -190,7 +192,7 @@
             android:button="@null"
             android:padding="4dp"
             android:text="Вчера"
-            android:textColor="@color/secondary_text"/>
+            android:textColor="@color/secondary_text" />
 
         <RadioButton
             android:id="@+id/todayRadBtn"
@@ -201,8 +203,18 @@
             android:button="@null"
             android:checked="true"
             android:padding="4dp"
-            android:textColor="@color/secondary_text"
-            android:text="Сегодня" />
+            android:text="Сегодня"
+            android:textColor="@color/secondary_text" />
     </RadioGroup>
+
+    <Switch
+        android:id="@+id/switch1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:text="Регулярный"
+        app:layout_constraintBottom_toTopOf="@+id/editTextDate"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/radioGroup" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -46,7 +46,7 @@ class RegularIncomesFragment : Fragment() {
                     budgetViewModel.updateRegLists()
                 }
             }
-        )
+        ,requireContext())
         binding.regIncRecView.adapter = mainAdapter
         budgetViewModel.getIncExpenses().observe(viewLifecycleOwner) {
             mainAdapter.submitList(it)

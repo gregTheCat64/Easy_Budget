@@ -40,9 +40,10 @@ class ExpensesFragment : Fragment() {
                     budgetViewModel.getSumRecommended()
                 }
             }
-        )
+        ,requireContext())
+
         binding.recViewExpenses.adapter = mainAdapter
-        budgetViewModel.expensesDataByDay.observe(viewLifecycleOwner) { expenses ->
+        budgetViewModel.getAllByDay().observe(viewLifecycleOwner) { expenses ->
             mainAdapter.submitList(expenses)
         }
         return binding.root

@@ -34,7 +34,7 @@ class IncomesFragment : Fragment() {
                     budgetViewModel.getCurrentBalance()
                 }
             }
-        )
+        ,requireContext())
         binding.recViewIncomes.adapter = mainAdapter
         budgetViewModel.incomesDataByDay.observe(viewLifecycleOwner) { incomes->
             mainAdapter.submitList(incomes)
