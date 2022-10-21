@@ -1,12 +1,9 @@
 package com.javacat.easybudget.domain.adapters
 
 import android.content.Context
-import android.content.res.Resources
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
-import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
@@ -16,7 +13,6 @@ import com.javacat.easybudget.databinding.BudgetItemCardBinding
 import com.javacat.easybudget.domain.models.BudgetItem
 import com.javacat.easybudget.domain.models.Type
 import java.text.DateFormat
-import java.util.Calendar
 
 class MainAdapter(private val listener: OnListener,val context: Context
 ): ListAdapter<BudgetItem, MainAdapter.BudgetItemViewHolder>(BudgetDiffCallback()) {
@@ -62,7 +58,7 @@ class MainAdapter(private val listener: OnListener,val context: Context
     override fun onBindViewHolder(holder: BudgetItemViewHolder, position: Int) {
         val budgetItem = getItem(position)
         holder.bind(budgetItem)
-        holder.itemView.setAnimation(AnimationUtils.loadAnimation(holder.itemView.context, R.anim.anim))
+       // holder.itemView.setAnimation(AnimationUtils.loadAnimation(holder.itemView.context, R.anim.anim))
     }
 }
 

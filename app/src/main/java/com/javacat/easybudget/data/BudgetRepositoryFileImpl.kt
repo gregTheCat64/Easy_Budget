@@ -1,9 +1,7 @@
 package com.javacat.easybudget.data
 
 import android.content.Context
-import android.os.Build
 import android.util.Log
-import androidx.annotation.RequiresApi
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.google.gson.*
@@ -12,7 +10,6 @@ import com.javacat.easybudget.domain.BudgetRepository
 import com.javacat.easybudget.domain.models.BudgetItem
 import com.javacat.easybudget.domain.models.Type
 import java.time.LocalDate
-import java.time.YearMonth
 import java.time.format.DateTimeFormatter
 import java.util.Calendar
 
@@ -31,6 +28,7 @@ class BudgetRepositoryFileImpl(
     private val expenseDataByDay = MutableLiveData<List<BudgetItem>>()
     private val incomeDataByDay = MutableLiveData<List<BudgetItem>>()
     private val commonDataByDay = MutableLiveData<List<BudgetItem>>()
+    private val daysListData = MutableLiveData<List<BudgetItem>>()
 
     var currentDate = MutableLiveData<Calendar>()
 
@@ -48,6 +46,7 @@ class BudgetRepositoryFileImpl(
                 updateExpensesByMonth()
                 updateExpensesByDay()
                 updateIncomesByDay()
+                updateDayList()
 
             }
         }else sync()
@@ -65,7 +64,9 @@ class BudgetRepositoryFileImpl(
 
     override fun getIncomesByMonth(): LiveData<List<BudgetItem>> = incomeDataByMonth
 
-
+    override fun getDayList(): LiveData<List<BudgetItem>> {
+        return daysListData
+    }
 
     private fun updateExpensesByMonth(){
         Log.i("REPO", "updateExpByMonth")
@@ -78,13 +79,19 @@ class BudgetRepositoryFileImpl(
         expenseDataByMonth.value = expenses
     }
 
-
     private fun updateIncomesByMonth(){
         val incomes= budgetItems.filter { it.category.type == Type.INCOMES
                 && it.date.get(Calendar.MONTH) == currentDate.value?.get(Calendar.MONTH)
                 && it.date.get(Calendar.YEAR) == currentDate.value?.get(Calendar.YEAR)}
         incomeDataByMonth.value = incomes
     }
+
+    private fun updateDayList(){
+        val days = budgetItems.filter {it.date.get(Calendar.MONTH) == currentDate.value?.get(Calendar.MONTH)&&
+                it.date.get(Calendar.YEAR) == currentDate.value?.get(Calendar.YEAR)  }
+        daysListData.value = days
+    }
+
 
 
     override fun setCurrentDay(date: Calendar) {
@@ -95,6 +102,12 @@ class BudgetRepositoryFileImpl(
         updateExpensesByMonth()
         updateIncomesByMonth()
         updateCommonByDay()
+        updateDayList()
+    }
+
+    override fun getCurrentDay(): Calendar?{
+        val date = currentDate.value
+        return date
     }
 
     override fun getIncomesByDay(): LiveData<List<BudgetItem>> = incomeDataByDay
@@ -140,6 +153,8 @@ class BudgetRepositoryFileImpl(
     }
 
 
+
+
     override fun removeById(id: Long) {
         budgetItems = budgetItems.filter { it.id != id }
         data.value = budgetItems
@@ -147,6 +162,7 @@ class BudgetRepositoryFileImpl(
 //        updateExpensesByMonth()
 //        updateIncomesByMonth()
         updateCommonByDay()
+        updateDayList()
         sync()
 
     }

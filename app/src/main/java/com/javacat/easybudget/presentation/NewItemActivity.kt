@@ -2,13 +2,11 @@ package com.javacat.easybudget.presentation
 
 import android.app.DatePickerDialog
 import android.content.Intent
-import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
 import androidx.activity.viewModels
-import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import com.google.android.material.tabs.TabLayoutMediator
 import com.javacat.easybudget.R
@@ -20,7 +18,6 @@ import com.javacat.easybudget.domain.models.Type
 import com.javacat.easybudget.domain.viewmodels.BudgetViewModel
 import com.javacat.easybudget.domain.viewmodels.CategoryViewModel
 import java.text.DateFormat
-import java.time.LocalDate
 import java.util.Calendar
 
 class NewItemActivity : AppCompatActivity() {
@@ -35,7 +32,6 @@ class NewItemActivity : AppCompatActivity() {
         "Доходы"
     )
     var category: Category = Category(0, "", 0, Type.EXPENSES)
-
 
     private lateinit var binding: ActivityNewItemBinding
     val now = Calendar.getInstance()
@@ -111,6 +107,7 @@ class NewItemActivity : AppCompatActivity() {
         Log.i("LIFE", "saveBtn")
         var categoryOfItem: Category? = null
         var priceOfItem = 0
+        now.clear()
 
         if (binding.priceOfBudgetItem.text.isNotBlank()) {
             priceOfItem = binding.priceOfBudgetItem.text.toString().toInt()
@@ -131,7 +128,7 @@ class NewItemActivity : AppCompatActivity() {
             Toast.makeText(applicationContext, "Выберите категорию", Toast.LENGTH_SHORT).show()
             return
         }
-        now.set(nowYear,nowMonth,nowDay)
+        now.set(nowYear,nowMonth,nowDay+1)
         Log.i("REGCAL", "choosenDate: ${itemDate.time}")
         Log.i("REGCAL", "calendarDate: ${now.time}")
 
@@ -147,7 +144,7 @@ class NewItemActivity : AppCompatActivity() {
                         date = itemDate
                     )
                 )
-                if (!itemDate.time.after(now.time)){
+                if (itemDate.time.before(now.time)){
                     budgetViewModel.save(
                         BudgetItem(
                             0,

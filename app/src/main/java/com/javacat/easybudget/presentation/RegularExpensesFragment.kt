@@ -58,7 +58,7 @@ class RegularExpensesFragment : Fragment() {
 
 
         val choosenDate = Calendar.getInstance()
-        choosenDate.set(2022,9,14)
+        //choosenDate.set(2022,9,14)
 
 
         binding.addBtn.setOnClickListener {

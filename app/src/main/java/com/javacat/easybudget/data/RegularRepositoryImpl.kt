@@ -8,7 +8,6 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.javacat.easybudget.domain.RegularRepository
 import com.javacat.easybudget.domain.models.BudgetItem
-import java.time.LocalDate
 
 class RegularRepositoryImpl(
     private val context: Context

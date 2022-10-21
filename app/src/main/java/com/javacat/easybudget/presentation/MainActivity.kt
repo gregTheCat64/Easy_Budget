@@ -9,14 +9,16 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import androidx.activity.viewModels
-import com.google.android.material.tabs.TabLayoutMediator
 import com.javacat.easybudget.R
 import com.javacat.easybudget.databinding.ActivityMainBinding
 import com.javacat.easybudget.databinding.StartBudgetDialogBinding
-import com.javacat.easybudget.domain.adapters.MainVpAdapter
+import com.javacat.easybudget.domain.adapters.ItemAdapter
+import com.javacat.easybudget.domain.adapters.OnItemListener
+import com.javacat.easybudget.domain.models.BudgetDataModel
+import com.javacat.easybudget.domain.models.BudgetItem
 import com.javacat.easybudget.domain.viewmodels.BudgetViewModel
 import com.javacat.easybudget.utils.AndroidUtils
-import java.text.DateFormat
+import java.text.SimpleDateFormat
 import java.util.Calendar
 
 class MainActivity : AppCompatActivity() {
@@ -28,6 +30,10 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private val todayDate = Calendar.getInstance()
     private var currentDate = Calendar.getInstance()
+    private lateinit var recViewAdapter: ItemAdapter
+    private lateinit var itemsMap: Map<Int, List<BudgetItem>>
+    private lateinit var mList: ArrayList<BudgetDataModel>
+
     private var startBudgetValue = 0
     private var currentBudgetValue: Int? = startBudgetValue
     private var sumToRecommend = 0
@@ -43,14 +49,14 @@ class MainActivity : AppCompatActivity() {
 
         //получаем текущий месяц
         //Календарь
-
         budgetViewModel.setDay(currentDate)
         Log.i("TIME", "date in main$currentDate")
 
         //проверка работы подсчета рек.суммы:
         val startDate = Calendar.getInstance()
-        startDate.set(2022,9,12)
-        //budgetViewModel.saveStartDate(startDate)
+        startDate.set(2022,9,19)
+        budgetViewModel.saveStartDate(startDate)
+
 
         //получаем тек. баланс
         budgetViewModel.getCurrentBalance().observe(this) {
@@ -81,13 +87,14 @@ class MainActivity : AppCompatActivity() {
 
         //кнопки взад вперед:
         binding.previousBtn.setOnClickListener {
-            currentDate.add(Calendar.DAY_OF_MONTH, -1)
+            currentDate.add(Calendar.MONTH, -1)
             budgetViewModel.setDay(currentDate)
             updateUi()
+            //updateList()
         }
 
         binding.nextBtn.setOnClickListener {
-            currentDate.add(Calendar.DAY_OF_MONTH, 1)
+            currentDate.add(Calendar.MONTH, 1)
             budgetViewModel.setDay(currentDate)
             updateUi()
         }
@@ -106,6 +113,12 @@ class MainActivity : AppCompatActivity() {
 
         binding.infoCardView.setOnClickListener {
             startActivity(Intent(this, RegularSpendingsActivity::class.java))
+        }
+
+        //recView
+        mList = ArrayList()
+        budgetViewModel.getDayListByMonth().observe(this) { dayList ->
+            updateList()
         }
     }
 
@@ -150,14 +163,24 @@ class MainActivity : AppCompatActivity() {
 
     private fun updateUi() {
         Log.i("LIFE", "updateUi")
-        binding.startBalance.text = currentBudgetValue.toString()
-        binding.RecSumTextView.text = sumToRecommend.toString()
-        val dateFormatter = DateFormat.getDateInstance(DateFormat.MEDIUM)
+
+        binding.startBalance.text = "$currentBudgetValue руб."
+        binding.RecSumTextView.text = "$sumToRecommend руб."
+        //val dateFormatter = DateFormat.getDateInstance(Calendar.MONTH)
+        val dateFormatter = SimpleDateFormat("MMM YY")
         binding.currentDay.text = dateFormatter.format(currentDate.time)
 
         if (currentDate == todayDate) {
-            binding.nextBtn.visibility = View.INVISIBLE
-        } else binding.nextBtn.visibility = View.VISIBLE
+            binding.apply {
+                nextBtn.isClickable = false
+                nextBtn.alpha = 0.2F
+            }
+        } else {
+            binding.apply {
+                nextBtn.isClickable = true
+                nextBtn.alpha = 1F
+            }
+        }
         Log.i("MYLOG", "budgetvalue: $sumToRecommend")
 
         if (sumToRecommend == 0) {
@@ -166,6 +189,33 @@ class MainActivity : AppCompatActivity() {
         } else {
             binding.cardViewTextView.text = "Лимит расходов на сегодня:"
             binding.RecSumTextView.visibility = View.VISIBLE
+        }
+    }
+
+    private fun updateList() {
+        val dayList = budgetViewModel.getDayListByMonth().value
+        mList.clear()
+        itemsMap = emptyMap()
+        if (dayList != null) {
+            itemsMap = dayList.sortedByDescending { it.date }
+                .groupBy { it.date.get(Calendar.DAY_OF_MONTH)}
+        }
+
+        for (items in itemsMap) {
+            mList.add(BudgetDataModel(items.value, items.key))
+        }
+        val itemAdapter = ItemAdapter(mList, this, object: OnItemListener{
+            override fun onRemove(budgetItem: BudgetItem) {
+                budgetViewModel.removeById(budgetItem.id)
+                budgetViewModel.getCurrentBalance()
+                budgetViewModel.getSumRecommended()
+            }
+
+        })
+        binding.recViewExpenses.adapter = itemAdapter
+        println("mlist: $mList")
+        for (i in mList){
+            println(i.toString())
         }
     }
 }

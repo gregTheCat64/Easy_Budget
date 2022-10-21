@@ -13,5 +13,7 @@ interface BudgetRepository {
     fun getIncomesByDay():LiveData<List<BudgetItem>>
     fun getExpensesByDay():LiveData<List<BudgetItem>>
     fun getCommonByDay():LiveData<List<BudgetItem>>
+    fun getDayList():LiveData<List<BudgetItem>>
     fun setCurrentDay(date:Calendar)
+    fun getCurrentDay():Calendar?
 }

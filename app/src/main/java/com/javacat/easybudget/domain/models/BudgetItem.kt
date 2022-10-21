@@ -1,8 +1,6 @@
 package com.javacat.easybudget.domain.models
 
-import java.time.LocalDate
 import java.util.Calendar
-import java.util.Date
 
 
 data class BudgetItem(
@@ -13,6 +11,6 @@ data class BudgetItem(
     val date: Calendar
 ) {
     override fun toString(): String {
-        return name
+        return "$category, $cost, ${date.time}"
     }
 }

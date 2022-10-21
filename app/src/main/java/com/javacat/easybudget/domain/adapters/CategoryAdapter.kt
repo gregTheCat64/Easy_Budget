@@ -5,15 +5,12 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.annotation.ColorInt
 import androidx.core.content.ContextCompat
-import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.javacat.easybudget.R
 import com.javacat.easybudget.databinding.CategoryItemCardBinding
 import com.javacat.easybudget.domain.models.Category
-import kotlin.properties.Delegates
+
 
 
 
@@ -67,13 +64,7 @@ class CategoryAdapter(
     override fun onBindViewHolder(holder: CategoryHolder, position: Int) {
         holder.bind(categList[position], listener)
 
-//        holder.itemView.setOnClickListener {
-//           if (selectedPosition != position) {
-//               selectedPosition = position
-//           }
-//            Log.i("MYADAP", "selected: $selectedPosition")
-//            notifyDataSetChanged()
-//        }
+
 
     }
 
@@ -86,6 +77,8 @@ class CategoryAdapter(
 
     }
 }
+
+
 
 
 

@@ -34,7 +34,8 @@ class BudgetViewModel(application: Application) : AndroidViewModel(application) 
 
     private val regData = regularRepository.getAll()
     private val byDayData = MutableLiveData<List<BudgetItem>>()
-
+    private val _daysData = MutableLiveData<List<BudgetItem>>()
+    var daysData:LiveData<List<BudgetItem>> = _daysData
     private val expCatList = expCatsRepository.getAll()
 
 
@@ -57,6 +58,10 @@ class BudgetViewModel(application: Application) : AndroidViewModel(application) 
 
     fun setDay(date: Calendar) {
         budgetRepository.setCurrentDay(date)
+    }
+
+    fun getDay():Calendar?{
+       return budgetRepository.getCurrentDay()
     }
 
     fun saveStartBalance(startBalance: Int) {
@@ -125,6 +130,10 @@ class BudgetViewModel(application: Application) : AndroidViewModel(application) 
 
     fun saveExpCat(category: Category){
         expCatsRepository.save(category)
+    }
+
+    fun getDayListByMonth():LiveData<List<BudgetItem>>{
+        return budgetRepository.getDayList()
     }
 
 

@@ -28,16 +28,17 @@ class NewExpenseFragment : Fragment(), CategoryAdapter.Listener {
         var expenseCategList: List<Category> = emptyList()
         budgetViewModel.getExpCats().observe(requireActivity(),{
         expenseCategList = it
+
         })
         val adapter = CategoryAdapter(expenseCategList, this, requireContext())
         binding.expensesRecView.adapter = adapter
-
         return binding.root
     }
 
     override fun onClick(category: Category) {
         budgetViewModel.saveExpCat(category)
         categViewModel.save(category)
+
 
     }
 
